@@ -1,0 +1,21 @@
+# --------------------------------------------------------------
+# Ce fichier contient tous les paramètres modifiables du module.
+# ! Ne pas modifier les noms de variables !
+# Les valeurs peuvent être mdifiées selon les préférences.
+# Les indentations doivent être respectées strictement.
+# --------------------------------------------------------------
+
+# Paramètres réseau
+network :
+  host : 0.0.0.0
+  port : 8080
+
+# Paramètres capteur
+sensor :
+  exposure : 0.3 # Temps d'exposition (secondes) (float)
+  max : 100
+  min : 0
+
+# Paramètres module
+module :
+  delay : 300 # Delai entre deux captures (secondes) (int)
