@@ -34,6 +34,8 @@ Nous avons intitulé le projet "Néphélé" :cloud:
 
 #### Dépendances
 
+python -m pip install -r requirements_module.txt
+
 #### Configuration
 
 ### Module
