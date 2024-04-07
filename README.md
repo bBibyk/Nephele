@@ -32,6 +32,12 @@ Nous avons intitulé le projet "Néphélé" :cloud:
 
 ### Client
 
+Les éléments suivants seront nécessaires pour faire fonctionner le module:
+
+ - **Carte Raspberry Pi**. N'importe quelle version pourra être utilisée, mais ce projet sera réalisé avec une carte Raspberry Pi 4.
+ - **Alimentation USB-C** compatible avec la carte Raspberry Pi.
+ - **Carte MicroSD**
+
 #### Dépendances
 
 python -m pip install -r requirements_module.txt
