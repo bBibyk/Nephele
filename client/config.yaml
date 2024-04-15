@@ -7,8 +7,12 @@
 
 # Paramètres réseau
 network :
-  host : 0.0.0.0
-  port : 8080
+  client :
+    host : localhost
+    port : 8080
+  server :
+    host : localhost # L'adresse IP du serveur, doit être modifiée si le serveur est distant
+    port : 4202
 
 # Paramètres capteur
 sensor :
