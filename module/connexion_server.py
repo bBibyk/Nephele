@@ -3,8 +3,6 @@ import os
 import yaml
 import time
 
-REQUESTS = ["<TME>", "<SYN>", "<PHT>"]
-
 class Connexion:
     def __init__(self):
         self.load_configurations()
@@ -23,7 +21,7 @@ class Connexion:
         try:
             self.__socket.listen(1)
             self.__client_socet, self.__client_address = self.__socket.accept()
-            self.__logger(f"Connexion established from {self.__client_address}.")
+            self.__logger(f"Connexion established with {self.__client_address}.")
             return True
         except Exception as e:
             self.__logger("Unable to connect.", e)
@@ -35,12 +33,12 @@ class Connexion:
     def send_request(self, request : str):
         request = None
         try:
-            self.__client_socet.sendall()
-            request.decode("utf-8")
-            self.__logger("Request received.")
+            self.__client_socet.sendall(bytes(request, "utf-8"))
+            self.__logger("Request sent.")
+            return True
         except Exception as e:
-            self.__logger("Unable to receive request.", e)
-        return request
+            self.__logger("Unable to send request.", e)
+            return False
     
     def send_parameters(self):
         pass
@@ -61,4 +59,4 @@ class Connexion:
 if __name__ == "__main__":
     print("Test class Connexion")
     connexion = Connexion()
-    print(connexion.)
+    print(connexion.connect())

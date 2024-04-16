@@ -2,8 +2,6 @@ import socket
 import time
 import yaml
 
-REQUESTS = ["<TME>", "<SYN>", "<PHT>"]
-
 class Connexion:
     def __init__(self):
         self.load_configurations()
@@ -59,4 +57,4 @@ class Connexion:
 if __name__ == "__main__":
     print("Test class Connexion")
     connexion = Connexion()
-    print(connexion.recv_request())
+    print(connexion.connect())

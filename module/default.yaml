@@ -7,9 +7,6 @@
 
 # Paramètres réseau
 network :
-  client :
-    host : localhost
-    port : 8080
   server :
     host : localhost # L'adresse IP du serveur, doit rester localhost
     port : 4202 # Le port du serveur, doit correspondre au port indiqué dans config.yaml
