@@ -31,14 +31,30 @@ class Connexion:
         pass
 
     def send_request(self, request : str):
-        request = None
         try:
+            if(self.is_socket_closed()):
+                self.__logger("Unable to send request. Connexion closed.")
+                return False
             self.__client_socet.sendall(bytes(request, "utf-8"))
             self.__logger("Request sent.")
             return True
         except Exception as e:
             self.__logger("Unable to send request.", e)
             return False
+    
+    def is_socket_closed(self) -> bool:
+        try:
+            data = self.__client_socet.recv(1, socket.MSG_DONTWAIT | socket.MSG_PEEK)
+            if len(data) == 0:
+                return True
+        except BlockingIOError:
+            return False  # socket is open and reading from it would block
+        except ConnectionResetError:
+            return True  # socket was closed for some other reason
+        except Exception as e:
+            self.__logger("Unexpected exception when checking if a socket is closed.", e)
+            return False
+        return False
     
     def send_parameters(self):
         pass
@@ -56,7 +72,16 @@ class Connexion:
         else:
             print(f"\t[{current_time}] Connexion : {message}", exception)
 
+    def disconnect(self):
+        self.__socket.close()
+        self.__logger("Connexion closed.")
+
 if __name__ == "__main__":
     print("Test class Connexion")
     connexion = Connexion()
     print(connexion.connect())
+    print(connexion.send_request("<BALS>"))
+    time.sleep(1)
+    print(connexion.send_request("<SALS>"))
+
+    connexion.disconnect()
