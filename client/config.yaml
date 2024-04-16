@@ -20,6 +20,11 @@ sensor :
   max : 100
   min : 0
 
+# Paramètres client
+client :
+  depot : ./depot
+
 # Paramètres module
 module :
+  shots : ./shots
   delay : 300 # Delai entre deux captures (secondes) (int)
