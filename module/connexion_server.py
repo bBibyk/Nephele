@@ -1,28 +1,64 @@
 import socket
 import os
+import yaml
+import time
+
+REQUESTS = ["<TME>", "<SYN>", "<PHT>"]
 
 class Connexion:
     def __init__(self):
+        self.load_configurations()
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.__socket.bind(("localhost", 4202))
-        self.__socket.listen(10)
-        self.client_socet, self.client_address = self.__socket.accept()
-        print("Connection from", self.client_address)
-        data = self.client_socet.recv(1024)
-        print("Received", repr(data))
-        self.client_socet.send(b"Hi, how are you ?")
-        print("Data sent")
-        data = self.client_socet.recv(1024) #Est-ce bloquant ?
-        self.client_socet.close()
-        self.__socket.close()
+        self.__socket.bind((self.configurations["network"]["server"]["host"], self.configurations["network"]["server"]["port"]))
 
-    def open_connection(self):
+    def load_configurations(self):
+        self.configurations = None
+        try:
+            self.configurations = yaml.load(open("default.yaml", "r"), Loader=yaml.SafeLoader)
+            self.__logger("Configurations loaded.")
+        except Exception as e:
+            self.__logger("Unable to load configurations.", e)
+
+    def connect(self):
+        try:
+            self.__socket.listen(1)
+            self.__client_socet, self.__client_address = self.__socket.accept()
+            self.__logger(f"Connexion established from {self.__client_address}.")
+            return True
+        except Exception as e:
+            self.__logger("Unable to connect.", e)
+            return False
+        
+    def handle_request(self):
         pass
 
-    def synchronize(self):
+    def send_request(self, request : str):
+        request = None
+        try:
+            self.__client_socet.sendall()
+            request.decode("utf-8")
+            self.__logger("Request received.")
+        except Exception as e:
+            self.__logger("Unable to receive request.", e)
+        return request
+    
+    def send_parameters(self):
         pass
+
+    def send_time(self):
+        pass
+
+    def recv_photo(self):
+        pass
+
+    def __logger(self, message : str, exception : Exception = None):
+        current_time = time.strftime("%d/%m/%Y-%H:%M:%S", time.localtime())
+        if exception is None:
+            print(f"\t[{current_time}] Connexion : {message}")
+        else:
+            print(f"\t[{current_time}] Connexion : {message}", exception)
 
 if __name__ == "__main__":
-    print("***Test class Connexion***")
+    print("Test class Connexion")
     connexion = Connexion()
-    
+    print(connexion.)

@@ -1,0 +1,30 @@
+# --------------------------------------------------------------
+# Ce fichier contient tous les paramètres par défaut du module.
+# ! Ne pas modifier les noms de variables !
+# Les valeurs peuvent être mdifiées selon les préférences.
+# Les indentations doivent être respectées strictement.
+# --------------------------------------------------------------
+
+# Paramètres réseau
+network :
+  client :
+    host : localhost
+    port : 8080
+  server :
+    host : localhost # L'adresse IP du serveur, doit rester localhost
+    port : 4202 # Le port du serveur, doit correspondre au port indiqué dans config.yaml
+
+# Paramètres capteur
+sensor :
+  exposure : 0.3 # Temps d'exposition (secondes) (float)
+  max : 100
+  min : 0
+
+# Paramètres client
+client :
+  depot : ./depot
+
+# Paramètres module
+module :
+  shots : ./shots
+  delay : 300 # Delai entre deux captures (secondes) (int)

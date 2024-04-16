@@ -81,6 +81,8 @@ Matériel requis :
 
 ### Module
 
+\\TODO script bash pour le lancement automatique coté module
+
 ## Utilisation
 
 ### Paramètrage du module

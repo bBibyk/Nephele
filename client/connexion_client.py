@@ -2,6 +2,8 @@ import socket
 import time
 import yaml
 
+REQUESTS = ["<TME>", "<SYN>", "<PHT>"]
+
 class Connexion:
     def __init__(self):
         self.load_configurations()
