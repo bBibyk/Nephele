@@ -16,6 +16,9 @@ sensor :
   exposure : 0.3 # Temps d'exposition (secondes) (float)
   max : 100
   min : 0
+  resolution:
+    width: 800
+    height: 600
 
 # Paramètres client
 client :
@@ -25,3 +28,4 @@ client :
 module :
   shots : ./shots
   delay : 300 # Delai entre deux captures (secondes) (int)
+  image_name_format : "StationFac_L1_ImageCiel_{timestamp}.jpg"
