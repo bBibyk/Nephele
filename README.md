@@ -56,6 +56,7 @@ python -m pip install -r requirements_module.txt
 
 #### Configuration
 
+\\TODO details maybe not mandatory
 Matériel requis :
 
  - Un ordinateur avec un lecteur de carte SD
@@ -82,6 +83,7 @@ Matériel requis :
 ### Module
 
 \\TODO script bash pour le lancement automatique coté module
+\\TODO how to venv // pip install
 
 ## Utilisation
 
