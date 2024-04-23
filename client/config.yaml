@@ -8,10 +8,10 @@
 # Paramètres réseau
 network :
   client :
-    host : localhost
+    host : 10.0.0.10
     port : 7667
   server :
-    host : localhost # L'adresse IP du serveur, doit être modifiée si le serveur est distant
+    host : 10.0.0.20 # L'adresse IP du serveur, doit être modifiée si le serveur est distant
     port : 4202 # Le port du serveur, doit correspondre au port indiqué dans default.yaml
 
 # Paramètres capteur

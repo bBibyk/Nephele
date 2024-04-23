@@ -40,6 +40,15 @@ python -m pip install -r requirements_client.txt
 
 #### Configuration
 
+Il faut aussi configurer une adresse IP statique sur l'interface qui sera utilisée pour la communication avec le module. Dans notre cas c'est l'interface eth0.
+
+Pour cela il faut modifier le fichier de configuration du démon DHCPCD du système en 3 étapes:
+ - Lancer la commande ```sudo nano /etc/dhcpcd.conf```
+ - Ecrire :
+  interface eth0
+  static ip_address=10.0.0.10/24
+ - Lancer la commande ```sudo reboot```
+
 ### Module
 
 Les éléments suivants seront nécessaires pour faire fonctionner le module:
