@@ -2,6 +2,7 @@ import socket
 import os
 import yaml
 import time
+import json
 
 class Connexion:
     def __init__(self):
@@ -28,8 +29,30 @@ class Connexion:
             self.__logger("Unable to connect.", e)
             return False
         
-    def handle_request(self):
-        pass
+    def __recv_until_end(self):
+        data = b""
+        done = False
+        try:
+            while not done and not self.is_socket_closed():
+                buffer = self.__client_socket.recv(1024)
+                if data[-5:] == bytes("<END>", "utf-8"):
+                    done = True
+                else:
+                    data += buffer
+            return data[:-5]
+        except Exception as e:
+            self.__logger("Unable to receive data.", e)
+            return None
+
+    def __send_all_data(self, data):
+        try:
+            self.__client_socket.sendall(data)
+            self.__client_socket.send(bytes("<END>", "utf-8"))
+            self.__logger("Data sent.")
+            return True
+        except Exception as e:
+            self.__logger("Unable to send data.", e)
+            return False
 
     def send_request(self, request : str):
         try:
@@ -57,8 +80,19 @@ class Connexion:
             return False
         return False
     
-    def recv_parameters(self):
-        pass
+    def recv_configurations(self):
+        self.__logger("Waiting for configurations...")
+        data = self.__recv_until_end()
+        if data is not None:
+            self.__logger("Configurations received.")
+            data = data.decode("utf-8").replace("\'", "\"")
+            data = json.loads(data)
+            self.configurations = data
+            return data
+        self.__logger("Unable to receive configurations.")
+        return None
+
+
 
     def recv_time(self):
         pass
@@ -86,23 +120,6 @@ if __name__ == "__main__":
     connexion = Connexion()
 
     connexion.connect()
-    connexion.send_request("<BALS>")
+    print(connexion.recv_configurations())
     connexion.disconnect_client()
-
-    connexion.connect()
-    connexion.send_request("<TIMES>")
-    connexion.disconnect_client()
-
-    connexion.connect()
-    connexion.send_request("<PARA>")
-    connexion.disconnect_client()
-
-    connexion.connect()
-    connexion.send_request("<PHOT>")
-    connexion.disconnect_client()
-    
-    connexion.connect()
-    connexion.send_request("<PHAT>")
-    connexion.disconnect_client()
-
     connexion.disconnect()

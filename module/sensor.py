@@ -12,7 +12,7 @@ class Sensor:
         
         self.configurations = None
         
-        if os.path.exists("config.yaml"):
+        if os.path.exists("config.yaml"): #logique défaillante, si le fichier existe, mais qu'il n'est pas à jour ?
             config = "config.yaml"
             self.__logger("config.yaml file reached.")
         else:
@@ -20,7 +20,7 @@ class Sensor:
             self.__logger("Couldn't reach config.yaml. Using default.yaml")
         
         try:
-            self.configurations = yaml.load(open(config, "r"), Loader=yaml.SafeLoader)
+            self.configurations = yaml.load(open(config, "r"), Loader=yaml.SafeLoader) #utiliser une variable qui sera passé en paramètres contenant les configurations
             self.__logger("Default configurations loaded.")
         except Exception as e:
             self.__logger("Unable to load default configurations.", e)

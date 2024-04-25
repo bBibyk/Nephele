@@ -28,13 +28,36 @@ class Connexion:
             self.__logger("Unable to connect.", e)
             return False
         
+    def __recv_until_end(self):
+        data = b""
+        done = False
+        try:
+            while not done and not self.is_socket_closed():
+                buffer = self.__socket.recv(1024)
+                if data[-5:] == bytes("<END>", "utf-8"):
+                    done = True
+                else:
+                    data += buffer
+            return data[:-5]
+        except Exception as e:
+            self.__logger("Unable to receive data.", e)
+            return None
+
+    def __send_all_data(self, data):
+        try:
+            self.__socket.sendall(data)
+            self.__socket.send(bytes("<END>", "utf-8"))
+            self.__logger("Data sent.")
+            return True
+        except Exception as e:
+            self.__logger("Unable to send data.", e)
+            return False
+        
     def handle_request(self, request):
-        if request=="<BALS>":
-            self.__logger("Default tag received.")
-        elif request=="<TIME>":
+        if request=="<TIME>":
             self.send_time()
         elif request=="<PARA>":
-            self.send_parameters()
+            self.send_configurations()
         elif request=="<PHOT>":
             self.recv_photo()
         else:
@@ -53,22 +76,25 @@ class Connexion:
         return request
     
     # Balise <PARA>
-    def send_parameters(self):
-        self.__logger("Sending parameters...")
-        self.__logger("Parameters sent.")
+    def send_configurations(self):
+        self.__logger("Sending configurations...")
+        status = self.__send_all_data(bytes(str(self.configurations), "utf-8"))
+        if status:
+            self.__logger("Configurations sent.")
+            return True
+        self.__logger("Failed sending configurations.")
+        return False
 
     # Balise <TIME>
     def send_time(self):
-        try:
-            if(self.is_socket_closed()):
-                self.__logger("Unable to send request. Connexion closed.")
-                return False
-            self.__socket.sendall(bytes(time.time(), "utf-8"))
+        self.__logger("Sending time...")
+        status = self.__send_all_data(bytes(str(time.time()), "utf-8"))
+        if status:
             self.__logger("Time sent.")
             return True
-        except Exception as e:
-            self.__logger("Unable to send request.", e)
-            return False
+        self.__logger("Failed sending time.")
+        return False
+        
 
     # Balise <PHOT>
     def recv_photo(self):
@@ -77,13 +103,13 @@ class Connexion:
 
     def is_socket_closed(self) -> bool:
         try:
-            data = self.__client_socet.recv(1, socket.MSG_DONTWAIT | socket.MSG_PEEK)
+            data = self.__socket.recv(1, socket.MSG_DONTWAIT | socket.MSG_PEEK)
             if len(data) == 0:
                 return True
         except BlockingIOError:
-            return False  # socket is open and reading from it would block
+            return False  # Socket ouvert et la lecture bloquera
         except ConnectionResetError:
-            return True  # socket was closed for some other reason
+            return True  # socket fermée pour d'autres raisons
         except Exception as e:
             self.__logger("Unexpected exception when checking if a socket is closed.", e)
             return False
@@ -104,4 +130,6 @@ if __name__ == "__main__":
     print("Test class Connexion")
     connexion = Connexion()
     
+    connexion.connect()
+    connexion.send_configurations()
     connexion.disconnect()
