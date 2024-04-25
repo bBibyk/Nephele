@@ -7,6 +7,7 @@ class Connexion:
     def __init__(self):
         self.load_configurations()
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.__socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.__socket.bind((self.configurations["network"]["server"]["host"], self.configurations["network"]["server"]["port"]))
 
     def load_configurations(self):
@@ -20,7 +21,7 @@ class Connexion:
     def connect(self):
         try:
             self.__socket.listen(1)
-            self.__client_socet, self.__client_address = self.__socket.accept()
+            self.__client_socket, self.__client_address = self.__socket.accept()
             self.__logger(f"Connexion established with {self.__client_address}.")
             return True
         except Exception as e:
@@ -35,7 +36,7 @@ class Connexion:
             if(self.is_socket_closed()):
                 self.__logger("Unable to send request. Connexion closed.")
                 return False
-            self.__client_socet.sendall(bytes(request, "utf-8"))
+            self.__client_socket.sendall(bytes(request, "utf-8"))
             self.__logger("Request sent.")
             return True
         except Exception as e:
@@ -44,7 +45,7 @@ class Connexion:
     
     def is_socket_closed(self) -> bool:
         try:
-            data = self.__client_socet.recv(1, socket.MSG_DONTWAIT | socket.MSG_PEEK)
+            data = self.__client_socket.recv(1, socket.MSG_DONTWAIT | socket.MSG_PEEK)
             if len(data) == 0:
                 return True
         except BlockingIOError:
@@ -56,13 +57,13 @@ class Connexion:
             return False
         return False
     
-    def send_parameters(self):
+    def recv_parameters(self):
         pass
 
-    def send_time(self):
+    def recv_time(self):
         pass
 
-    def recv_photo(self):
+    def send_photo(self):
         pass
 
     def __logger(self, message : str, exception : Exception = None):
@@ -72,16 +73,36 @@ class Connexion:
         else:
             print(f"\t[{current_time}] Connexion : {message}", exception)
 
+    def disconnect_client(self):
+        self.__client_socket.close()
+        self.__logger("Clinet socket closed.")
+    
     def disconnect(self):
         self.__socket.close()
-        self.__logger("Connexion closed.")
+        self.__logger("Listening socket closed.")
 
 if __name__ == "__main__":
     print("Test class Connexion")
     connexion = Connexion()
-    print(connexion.connect())
-    print(connexion.send_request("<BALS>"))
-    time.sleep(1)
-    print(connexion.send_request("<SALS>"))
+
+    connexion.connect()
+    connexion.send_request("<BALS>")
+    connexion.disconnect_client()
+
+    connexion.connect()
+    connexion.send_request("<TIMES>")
+    connexion.disconnect_client()
+
+    connexion.connect()
+    connexion.send_request("<PARA>")
+    connexion.disconnect_client()
+
+    connexion.connect()
+    connexion.send_request("<PHOT>")
+    connexion.disconnect_client()
+    
+    connexion.connect()
+    connexion.send_request("<PHAT>")
+    connexion.disconnect_client()
 
     connexion.disconnect()
