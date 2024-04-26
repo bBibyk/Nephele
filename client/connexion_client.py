@@ -1,56 +1,48 @@
 import socket
 import time
 import yaml
+from utils import *
 
 class Connexion:
     def __init__(self):
-        self.load_configurations()
+        self.update_configurations()
 
-    def load_configurations(self):
-        self.configurations = None
-        try:
-            self.configurations = yaml.load(open("config.yaml", "r"), Loader=yaml.SafeLoader)
-            self.__logger("Configurations loaded.")
-            return True
-        except Exception as e:
-            self.__logger("Unable to load configurations.", e)
-            return False
+    def update_configurations(self):
+        self.configurations = load_configurations("config.yaml")
 
     def connect(self):
         try:
             self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.__socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.__socket.bind((self.configurations["network"]["client"]["host"], self.configurations["network"]["client"]["port"]))
             self.__socket.connect((self.configurations["network"]["server"]["host"], self.configurations["network"]["server"]["port"]))
-            self.__logger("Connexion established.")
+            logger("Connexion", "Connexion established.")
             return True
         except Exception as e:
-            self.__logger("Unable to connect.", e)
+            logger("Connexion", "Unable to connect.", e)
             return False
         
-    def __recv_until_end(self):
+    def __recv_until_end(self, buffer_size=1024):
         data = b""
         done = False
         try:
             while not done and not self.is_socket_closed():
-                buffer = self.__socket.recv(1024)
+                buffer = self.__socket.recv(buffer_size)
+                data += buffer
                 if data[-5:] == bytes("<END>", "utf-8"):
                     done = True
-                else:
-                    data += buffer
             return data[:-5]
         except Exception as e:
-            self.__logger("Unable to receive data.", e)
+            logger("Connexion", "Unable to receive data.", e)
             return None
 
     def __send_all_data(self, data):
         try:
             self.__socket.sendall(data)
             self.__socket.send(bytes("<END>", "utf-8"))
-            self.__logger("Data sent.")
+            logger("Connexion", "Data sent.")
             return True
         except Exception as e:
-            self.__logger("Unable to send data.", e)
+            logger("Connexion", "Unable to send data.", e)
             return False
         
     def handle_request(self, request):
@@ -61,45 +53,61 @@ class Connexion:
         elif request=="<PHOT>":
             self.recv_photo()
         else:
-            self.__logger("Unrecognized tag received.")
+            logger("Connexion", "Unrecognized tag received.")
 
     # Les balises des requêtes sont dans le format <XXXX> où XXXX est l'identifiant de la requête
     def recv_request(self):
         request = None
         try:
-            self.__logger("Waiting for request...")
+            logger("Connexion", "Waiting for request...")
             request = self.__socket.recv(6)
             request = request.decode("utf-8")
-            self.__logger("Request received.")
+            logger("Connexion", "Request received.")
         except Exception as e:
-            self.__logger("Unable to receive request.", e)
+            logger("Connexion", "Unable to receive request.", e)
         return request
     
-    # Balise <PARA>
+    # Tag <PARA>
     def send_configurations(self):
-        self.__logger("Sending configurations...")
+        logger("Connexion", "Sending configurations...")
         status = self.__send_all_data(bytes(str(self.configurations), "utf-8"))
         if status:
-            self.__logger("Configurations sent.")
+            logger("Connexion", "Configurations sent.")
             return True
-        self.__logger("Failed sending configurations.")
+        logger("Connexion", "Failed sending configurations.")
         return False
 
-    # Balise <TIME>
+    # Tag <TIME>
     def send_time(self):
-        self.__logger("Sending time...")
+        logger("Connexion", "Sending time...")
         status = self.__send_all_data(bytes(str(time.time()), "utf-8"))
         if status:
-            self.__logger("Time sent.")
+            logger("Connexion", "Time sent.")
             return True
-        self.__logger("Failed sending time.")
+        logger("Connexion", "Failed sending time.")
         return False
         
-
-    # Balise <PHOT>
+    # Tag <PHOT>
     def recv_photo(self):
-        self.__logger("Waiting for photo...")
-        self.__logger("Photo received.")
+        logger("Connexion", "Waiting for photo...")
+        try :
+            filename = self.__recv_until_end(1).decode("utf-8")
+            filedata = self.__recv_until_end()
+            with open(get_script_directory() + "/depot/" + filename, "wb") as file:
+                file.write(filedata)
+                file.close()
+            logger("Connexion", "Photo received.")
+            return True
+        except Exception as e:
+            logger("Connexion", "Unable to receive photo.", e)
+            return False
+        
+    def request(self):
+        request = self.recv_request()
+        if request is not None:
+            self.handle_request(request)
+            return True
+        return False
 
     def is_socket_closed(self) -> bool:
         try:
@@ -111,25 +119,19 @@ class Connexion:
         except ConnectionResetError:
             return True  # socket fermée pour d'autres raisons
         except Exception as e:
-            self.__logger("Unexpected exception when checking if a socket is closed.", e)
+            logger("Connexion", "Unexpected exception when checking if a socket is closed.", e)
             return False
         return False
-
-    def __logger(self, message : str, exception : Exception = None):
-        current_time = time.strftime("%d/%m/%Y-%H:%M:%S", time.localtime())
-        if exception is None:
-            print(f"\t[{current_time}] Connexion : {message}")
-        else:
-            print(f"\t[{current_time}] Connexion : {message}", exception)
     
     def disconnect(self):
         self.__socket.close()
-        self.__logger("Connexion closed.")
+        logger("Connexion", "Connexion closed.")
 
 if __name__ == "__main__":
     print("Test class Connexion")
     connexion = Connexion()
     
-    connexion.connect()
-    connexion.send_configurations()
-    connexion.disconnect()
+    for i in range(3):
+        connexion.connect()
+        print(connexion.request())
+        connexion.disconnect()
