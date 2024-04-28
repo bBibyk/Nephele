@@ -22,10 +22,10 @@ sensor :
 
 # Paramètres client
 client :
-  depot : ./depot
+  depot : /depot
 
 # Paramètres module
 module :
-  shots : ./shots
+  shots : /shots
   delay : 300 # Delai entre deux captures (secondes) (int)
   image_name_format : "StationFac_L1_ImageCiel_{timestamp}.jpg"
