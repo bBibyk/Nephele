@@ -1,3 +1,3 @@
 module/libcamera/
-module/__pycache/
-client/__pycache/
+module/__pycache__/
+client/__pycache__/
