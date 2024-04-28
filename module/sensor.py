@@ -7,7 +7,6 @@ class Sensor:
         self.update_configurations(configurations)
         self.sync_time(pc_time)
         self.picam2=Picamera2()
-        # self.photos_taken : int = 0
     
     def update_configurations(self, configurations):
         
@@ -37,9 +36,7 @@ class Sensor:
         image_name : str = image_name_format.format(timestamp=timestamp)  
         return image_name
          
-    def start_capture(self):
-        self.capture_state = True
-        while self.capture_state:
+    def capture_file(self):
             try:
                 with self.picam2.start_preview():
                     
@@ -47,27 +44,13 @@ class Sensor:
                     image_path = join(self.configurations['module']['shots'], image_name)
                     with self.picam2.capture_file(image_path):
                         logger("Sensor", f"Image captured: {image_name}")
-                        # self.photos_taken += 1
-                    
-                    delay = self.configurations['module']['delay']
-                    if delay <= 0:
-                        self.stop_capture()
-                        logger("Sensor", "Invalid delay in configuration file.")
-                        return
-                    self.module_time.sleep(delay)
                     
             except Exception as e:
                 self.stop_capture()
                 logger("Sensor", "Error during capture.", e)
 
-
     def check_brightness(self):
         pass
-
-    def stop_capture(self):
-        self.capture_state = False
-        self.stop_preview()
-
 
 if __name__ == '__main__':
     from picamera2 import Preview
