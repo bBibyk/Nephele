@@ -15,7 +15,7 @@ class Sensor:
             self.configurations = configurations
             logger("Sensor","Configurations loaded.")
         else:
-            logger("sensor","No configurations provided.")
+            logger("Sensor","No configurations provided.")
     
     def sync_time(self, pc_time):
         self.module_time : time = pc_time
@@ -27,7 +27,7 @@ class Sensor:
         self.picam2.stop_preview()
     
     def quick_capture(self):
-        self.picam2.start_and_capture_file("test.jpg")
+        self.picam2.start_and_capture_file("Test.jpg")
         
     def __name_image(self):
         
@@ -46,7 +46,6 @@ class Sensor:
                         logger("Sensor", f"Image captured: {image_name}")
                     
             except Exception as e:
-                self.stop_capture()
                 logger("Sensor", "Error during capture.", e)
 
     def check_brightness(self):
@@ -54,7 +53,7 @@ class Sensor:
 
 if __name__ == '__main__':
     from picamera2 import Preview
-    print("Test quick capture")
+    print("Test quick capture.")
     sensor = Sensor()
     sensor.quick_capture()
 
