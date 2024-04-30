@@ -66,7 +66,7 @@ if __name__ == '__main__':
     
     print("Test quick capture.")
     
-    sensor = Sensor(configurations=configurations, time=test_time)
+    sensor = Sensor(configurations=configurations, pc_time=test_time)
     sensor.quick_capture()
 
     print("Test classic capture")

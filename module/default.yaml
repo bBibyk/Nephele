@@ -11,21 +11,47 @@ network :
     host : localhost # L'adresse IP du serveur, doit correspondre à l'adresse indiquée dans config.yaml
     port : 4202 # Le port du serveur, doit correspondre au port indiqué dans config.yaml
 
+# Paramètres client
+client :
+  depot : /depot
+
 # Paramètres capteur
 sensor :
   exposure : 0.3 # Temps d'exposition (secondes) (float)
   max : 100
   min : 0
-  resolution:
-    width: 800
-    height: 600
-
-# Paramètres client
-client :
-  depot : /depot
+  resolution: #Resolution brute des images capturées par le capteur
+    width: 
+    height: 
+  brightness_threshold : 0 #Valeur normalisée entre 0 (très sombre) et 255 (très claire) (int)
 
 # Paramètres module
 module :
   shots : /shots
   delay : 300 # Delai entre deux captures (secondes) (int)
-  image_name_format : "StationFac_L1_ImageCiel_{timestamp}.jpg"
+
+  clock:
+    sync_interval: 60  # Synchroniser l'horloge toutes les (sync_interval) secondes (int)
+
+  # Configuration des flux
+  main:  # Flux principal
+    size: [1920, 1080] 
+    format: XBGR8888  # Format d'image
+    
+  lores:  # Flux basse résolution
+    size: [320, 240] 
+    format: YUV420
+
+  raw:  # Flux brut
+    format: SRGGB12_CSI2P  # Format capteur brut
+
+  format :
+    image_name : 'StationFac_L1_ImageCiel_{timestamp}'
+    timestamp : '%Y%m%d%H%M%S'
+    image_format : #'.jpg' ou '.png' 
+
+  night_mode : 
+    enabled : true #Activer le mode nuit
+    delay : #Delai entre deux captures la nuit (secondes) (int)
+    start_hour : 20 #En heures
+    end_hour : 6 #En heures

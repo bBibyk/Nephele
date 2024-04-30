@@ -35,5 +35,5 @@ pc_time = connection.recv_time()
 connection.disconnect_client()
 #TODO reste du script...
 
-sensor.start_capture()
+sensor.capture_image()
 #send_photo('./shots/*')
