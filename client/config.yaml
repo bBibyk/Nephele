@@ -1,6 +1,7 @@
 # --------------------------------------------------------------
 # Ce fichier contient tous les paramètres modifiables du module.
 # ! Ne pas modifier les noms de variables !
+# ! Ne pas utiliser les caractères " et ' qui sont réservés pour la délimitation des clés dans les dictionnaires Python !
 # Les valeurs peuvent être mdifiées selon les préférences.
 # Les indentations doivent être respectées strictement.
 # --------------------------------------------------------------
@@ -19,7 +20,7 @@ sensor :
 
 # Paramètres client
 client :
-  depot : ./depot
+  storage_path : ./depot # Chemin vers le dossier de depot, de préférence absolu
 
 # Paramètres module
 module :

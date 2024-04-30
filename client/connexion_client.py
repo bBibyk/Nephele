@@ -70,6 +70,7 @@ class Connexion:
     # Tag <PARA>
     def send_configurations(self):
         logger("Connexion", "Sending configurations...")
+        self.update_configurations()
         status = self.__send_all_data(bytes(str(self.configurations), "utf-8"))
         if status:
             logger("Connexion", "Configurations sent.")
@@ -93,7 +94,8 @@ class Connexion:
         try :
             filename = self.__recv_until_end(1).decode("utf-8")
             filedata = self.__recv_until_end()
-            with open(get_script_directory() + "/depot/" + filename, "wb") as file:
+            path = self.configurations["client"]["storage_path"]
+            with open(path + "/" + filename, "wb") as file:
                 file.write(filedata)
                 file.close()
             logger("Connexion", "Photo received.")

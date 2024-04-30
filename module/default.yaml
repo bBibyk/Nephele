@@ -8,7 +8,7 @@
 # Paramètres réseau
 network :
   server :
-    host : localhost # L'adresse IP du serveur, doit rester localhost
+    host : localhost # L'adresse IP du serveur, doit correspondre à l'adresse indiquée dans config.yaml
     port : 4202 # Le port du serveur, doit correspondre au port indiqué dans config.yaml
 
 # Paramètres capteur

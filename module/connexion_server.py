@@ -80,7 +80,7 @@ class Connexion:
             logger("Connexion", "Configurations received.")
             data = data.decode("utf-8").replace("\'", "\"")
             try :
-                data = json.loads(data)
+                data = json.loads(fr"{data}")
             except Exception as e:
                 logger("Connexion", "Unable to load configurations.", e)
                 return None
