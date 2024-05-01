@@ -39,7 +39,7 @@ class Sensor:
         
     def __name_image(self):
         
-        timestamp : str = self.module_time.strftime("%Y%m%d%H%M%S")
+        timestamp : str = time.strftime("%Y%m%d%H%M%S", self.module_time)
         image_name_format : str = self.configurations['module']['format']['image_name']
         image_name : str = image_name_format.format(timestamp=timestamp)  
         return image_name
