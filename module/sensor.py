@@ -1,5 +1,6 @@
-from picamera2 import Picamera2
+from picamera2 import Picamera2, Preview
 from utils import *
+from time import sleep
 from os.path import join
 
 class Sensor:
@@ -21,8 +22,13 @@ class Sensor:
         self.module_time : time = pc_time
         
     def start_preview(self):
-        self.picam2.start_preview()
-    
+            
+        self.config = self.picam2.create_preview_configuration()
+        self.picam2.configure(self.config)
+        self.picam2.start_preview(Preview.QTGL)
+        self.picam2.start()
+        sleep(1)
+
     def stop_preview(self):
         self.picam2.stop_preview()
     
@@ -40,18 +46,19 @@ class Sensor:
         
     def capture_image(self):
             try:
-                with self.start_preview():
+                with self.start_preview(): 
                     
-                    image_name = self.__name_image()
-                    image_path = image_name + get_script_directory()+self.configurations['module']['shots']
+                    # image_name = self.__name_image()
+                    image_name="test.jpg"
+                    # image_path = image_name + get_script_directory()+self.configurations['module']['shots']
                     # image_path = join(self.configurations['module']['shots'], image_name)
-                    with self.picam2.capture_file(image_path):
+                    with self.picam2.capture_file(image_name):
                         logger("Sensor", f"Image captured: {image_name}")
-                    self.stop_preview()
-                    
+                    self.picam2.close()
+                
             except Exception as e:
                 logger("Sensor", "Error during capture.", e)
-                self.stop_preview()
+                self.picam2.close()
 
     def check_brightness(self):
         pass
