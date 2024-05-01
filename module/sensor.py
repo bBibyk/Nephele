@@ -46,16 +46,15 @@ class Sensor:
         
     def capture_image(self):
             try:
-                with self.start_preview(): 
+                self.start_preview()
                     
-                    # image_name = self.__name_image()
-                    image_name="test.jpg"
-                    # image_path = image_name + get_script_directory()+self.configurations['module']['shots']
-                    # image_path = join(self.configurations['module']['shots'], image_name)
-                    with self.picam2.capture_file(image_name):
-                        logger("Sensor", f"Image captured: {image_name}")
-                    self.picam2.close()
-                
+                image_name = self.__name_image()
+                image_path = image_name + get_script_directory()+self.configurations['module']['shots']
+                image_path = join(self.configurations['module']['shots'], image_name)
+                with self.picam2.capture_file(image_path):
+                    logger("Sensor", f"Image captured: {image_name}")
+                self.picam2.close()
+            
             except Exception as e:
                 logger("Sensor", "Error during capture.", e)
                 self.picam2.close()
