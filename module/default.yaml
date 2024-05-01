@@ -27,7 +27,7 @@ sensor :
 
 # Paramètres module
 module :
-  shots : /shots
+  shots : /shots/
   delay : 300 # Delai entre deux captures (secondes) (int)
 
   clock:
@@ -46,9 +46,8 @@ module :
     format: SRGGB12_CSI2P  # Format capteur brut
 
   format :
-    image_name : 'StationFac_L1_ImageCiel_{timestamp}'
+    image_name : 'StationFac_L1_ImageCiel_{timestamp}.png'
     timestamp : '%Y%m%d%H%M%S'
-    image_format : #'.jpg' ou '.png' 
 
   night_mode : 
     enabled : true #Activer le mode nuit

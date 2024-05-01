@@ -18,8 +18,8 @@ class Sensor:
         else:
             logger("Sensor","No configurations provided.")
     
-    def __sync_time(self, pc_time):
-        self.module_time : time = pc_time
+    def __sync_time(self, pc_time : time):
+        self.module_time = time.localtime(pc_time)
         
     def start_preview(self):
             
@@ -40,7 +40,7 @@ class Sensor:
     def __name_image(self):
         
         timestamp : str = self.module_time.strftime("%Y%m%d%H%M%S")
-        image_name_format : str = self.configurations['module']['image_name_format']
+        image_name_format : str = self.configurations['module']['format']['image_name']
         image_name : str = image_name_format.format(timestamp=timestamp)  
         return image_name
         
@@ -49,7 +49,7 @@ class Sensor:
                 self.start_preview()
                     
                 image_name = self.__name_image()
-                image_path = image_name + get_script_directory()+self.configurations['module']['shots']
+                image_path = get_script_directory()+self.configurations['module']['shots'] + image_name
                 image_path = join(self.configurations['module']['shots'], image_name)
                 with self.picam2.capture_file(image_path):
                     logger("Sensor", f"Image captured: {image_name}")
