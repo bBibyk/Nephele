@@ -50,9 +50,8 @@ class Sensor:
                     
                 image_name = self.__name_image()
                 image_path = get_script_directory()+self.configurations['module']['shots'] + image_name
-                image_path = join(self.configurations['module']['shots'], image_name)
-                with self.picam2.capture_file(image_path):
-                    logger("Sensor", f"Image captured: {image_name}")
+                self.picam2.capture_file(image_path)
+                logger("Sensor", f"Image captured: {image_name}")
                 self.picam2.close()
             
             except Exception as e:
