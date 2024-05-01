@@ -1,12 +1,11 @@
 from picamera2 import Picamera2, Preview
 from utils import *
 from time import sleep
-from os.path import join
 
 class Sensor:
     def __init__(self, configurations, pc_time : time):
         self.update_configurations(configurations)
-        self.__sync_time(pc_time)
+        self.sync_time(pc_time)
         self.picam2=Picamera2()
     
     def update_configurations(self, configurations):
@@ -18,7 +17,7 @@ class Sensor:
         else:
             logger("Sensor","No configurations provided.")
     
-    def __sync_time(self, pc_time : time):
+    def sync_time(self, pc_time : time):
         self.module_time = time.localtime(pc_time)
         
     def start_preview(self):
@@ -45,21 +44,21 @@ class Sensor:
         return image_name
         
     def capture_image(self):
-            try:
-                self.start_preview()
-                    
+            try:    
                 image_name = self.__name_image()
                 image_path = get_script_directory()+self.configurations['module']['shots'] + image_name
                 self.picam2.capture_file(image_path)
                 logger("Sensor", f"Image captured: {image_name}")
-                self.picam2.close()
             
             except Exception as e:
                 logger("Sensor", "Error during capture.", e)
-                self.picam2.close()
+                self.stop()
 
     def check_brightness(self):
         pass
+    
+    def stop(self):
+        self.picam2.close()
 
 if __name__ == '__main__':
     
@@ -75,5 +74,11 @@ if __name__ == '__main__':
     # sensor.quick_capture()
 
     print("Test classic capture")
+    sensor.start_preview()
     sensor.capture_image()
+    for i in range(3):
+        sensor.sync_time(time.time())
+        sensor.capture_image()
+        sleep(3)
+    sensor.stop()
     

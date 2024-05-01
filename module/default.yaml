@@ -46,7 +46,7 @@ module :
     format: SRGGB12_CSI2P  # Format capteur brut
 
   format :
-    image_name : 'StationFac_L1_ImageCiel_{timestamp}.png'
+    image_name : 'StationFac_L1_ImageCiel_{timestamp}.jpg'
     timestamp : '%Y%m%d%H%M%S'
 
   night_mode : 
