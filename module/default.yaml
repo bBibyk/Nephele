@@ -35,7 +35,7 @@ module :
     image_name : 'StationFac_L1_ImageCiel_{timestamp}.jpg'
     timestamp : '%Y%m%d%H%M%S'
 
-  brightness_threshold : 0 #En Lux
+  brightness_threshold :  #En Lux
 
   night_mode : 
     enabled : true #Activer le mode nuit
