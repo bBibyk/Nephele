@@ -1,14 +1,14 @@
 from picamera2 import Picamera2, Preview
 from utils import *
 from time import sleep
-from os import remove
 
 class Sensor:
     def __init__(self, configurations, pc_time : time):
-        self.metadata = None
         self.update_configurations(configurations)
         self.sync_time(pc_time)
         self.picam2=Picamera2()
+        self.metadata = None
+        self.module_time_specifier = ""
     
     def update_configurations(self, configurations):
         
@@ -19,31 +19,50 @@ class Sensor:
         else:
             logger("Sensor","No configurations provided.")
     
-    def sync_time(self, pc_time : time):    
-        self.module_time = time.localtime(pc_time)
-        
-    def start_preview(self):
-        
-        self.picam2.start_preview(Preview.NULL)
-        self.picam2.start()
-        sleep(1)
+    def sync_time(self, pc_time : time=None):    
+        if pc_time is None:
+            self.module_time = time.time()
+            self.module_time_specifier="m"
+        else:
+            self.module_time = time.localtime(pc_time)
+            self.module_time_specifier=""
+            
+    def start_camera(self):
+        if not self.picam2.started:  
+            try:
+                self.picam2.start_preview(Preview.NULL)
+                self.picam2.start()
+                sleep(1)
+                logger("Sensor", "Picamera initialized.")
+            except Exception as e:
+                logger("Sensor", "Error during preview initialization.", e)
+            
+        else:
+            logger("Sensor", "Picamera preview already started.")
 
-    def stop_preview(self):
-        self.picam2.stop_preview()
-    
     def quick_capture(self):
         image_name = "Test.jpg"
-        self.picam2.start_and_capture_file(image_name)
-        logger("Sensor", f"Image captured: {image_name}")
-        self.stop()
+        try:    
+            if self.picam2.started:
+                self.picam2.stop()
+            self.picam2.start_and_capture_file(image_name)
+            logger("Sensor", f"Test image captured: {image_name}")
+            self.close()
+        
+        except Exception as e:
+            logger("Sensor", "Error during test image capture.", e)
+            self.close()
         
     def __get_path(self):
         
-        timestamp : str = time.strftime("%Y%m%d%H%M%S", self.module_time)
-        image_name_format : str = self.configurations['module']['format']['image_name']
-        image_name : str = image_name_format.format(timestamp=timestamp)
-        image_path = get_script_directory()+self.configurations['module']['shots'] + image_name  
-        return image_path, image_name
+        try:
+            timestamp : str = time.strftime("%Y%m%d%H%M%S", self.module_time)
+            image_name_format : str = self.configurations['module']['format']['image_name']
+            image_name : str = self.module_time_specifier + image_name_format.format(timestamp=timestamp)
+            image_path = get_script_directory()+self.configurations['module']['shots'] + image_name  
+            return image_path, image_name
+        except Exception as e:
+            logger("Sensor", "Couldn't get image path.", e)
         
     def capture_image(self):
         
@@ -54,14 +73,14 @@ class Sensor:
         
         except Exception as e:
             logger("Sensor", "Error during capture.", e)
-            self.stop()
+            self.close()
 
     def check_brightness(self):
         if self.metadata is not None:
             brightness_threshold = self.configurations['sensor']['brightness_threshold']
-            if self.metadata['Lux']<brightness_threshold:
-                return False
-        return True
+            if self.metadata['Lux']>brightness_threshold:
+                return True
+        return False
     
     def __night_mode(args):
         pass
@@ -70,7 +89,7 @@ class Sensor:
         pass
                 
     
-    def stop(self):
+    def close(self):
         self.picam2.close()
 
 if __name__ == '__main__':
@@ -80,18 +99,13 @@ if __name__ == '__main__':
     configurations = load_configurations("default.yaml")
     test_time = time.time()
     
-    
-    # print("Test quick capture.")
-    
     sensor = Sensor(configurations=configurations, pc_time=test_time)
     # sensor.quick_capture()
 
     print("Test classic capture")
-    sensor.start_preview()
-    sensor.capture_image()
+    sensor.start_camera()
     for i in range(3):
         sensor.sync_time(time.time())
         sensor.capture_image()
         sleep(3)
-    sensor.stop()
-    
+    sensor.close()
