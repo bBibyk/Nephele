@@ -1,6 +1,7 @@
 from picamera2 import Picamera2, Preview
 from utils import *
 from time import sleep
+from os import remove
 
 class Sensor:
     def __init__(self, configurations, pc_time : time):
@@ -42,10 +43,11 @@ class Sensor:
 
     def quick_capture(self):
         image_name = "Test.jpg"
+        image_path = get_script_directory()+self.configurations['module']['shots'] + image_name
         try:    
             if self.picam2.started:
                 self.picam2.stop()
-            self.picam2.start_and_capture_file(image_name)
+            self.picam2.start_and_capture_file(image_path)
             logger("Sensor", f"Test image captured: {image_name}")
             self.close()
         
@@ -67,10 +69,16 @@ class Sensor:
     def capture_image(self):
         
         image_path, image_name = self.__get_path()
+        if not self.picam2.started:
+            logger("Sensor", "Camera preview is not active.")
+            return
+            
         try:    
             self.metadata = self.picam2.capture_file(image_path)
             logger("Sensor", f"Image captured: {image_name}")
-        
+            if not self.check_brightness():
+                remove(image_path)
+                logger("Sensor", f"Brightness does not satistfy the given threshold. Image deleted: {image_name}")
         except Exception as e:
             logger("Sensor", "Error during capture.", e)
             self.close()
