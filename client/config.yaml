@@ -1,28 +1,48 @@
 # --------------------------------------------------------------
-# Ce fichier contient tous les paramètres modifiables du module.
+# Ce fichier contient tous les paramètres par défaut du module.
 # ! Ne pas modifier les noms de variables !
-# ! Ne pas utiliser les caractères " et ' qui sont réservés pour la délimitation des clés dans les dictionnaires Python !
 # Les valeurs peuvent être mdifiées selon les préférences.
 # Les indentations doivent être respectées strictement.
 # --------------------------------------------------------------
 
 # Paramètres réseau
+#Paramètres réseau local
 network :
   server :
-    host : localhost # L'adresse IP du serveur, doit correspondre à l'adresse indiquée dans default.yaml
-    port : 4202 # Le port du serveur, doit correspondre au port indiqué dans default.yaml
+    host : localhost #L'adresse IP du module, doit correspondre à l'adresse indiquée dans default.yaml
+    port : 4202 #Le port du serveur, doit correspondre au port indiqué dans default.yaml
 
-# Paramètres capteur
-sensor :
-  exposure : 0.3 # Temps d'exposition (secondes) (float)
-  max : 100
-  min : 0
-
-# Paramètres client
+#Paramètres client
 client :
-  storage_path : ./depot # Chemin vers le dossier de depot, de préférence absolu
+  depot : /depot/
 
-# Paramètres module
+
+#Paramètres module
 module :
-  shots : ./shots
-  delay : 300 # Delai entre deux captures (secondes) (int)
+  shots : /shots/
+  delay : 300 #Delai entre deux captures (secondes) (int)
+
+  clock:
+    time_interval : 5  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
+    conf_interval : 30 #Synchroniser la configuration toutes les (conf_interval) captures (int)
+
+  #Paramètres capteur
+  sensor :
+    output_size : #Resolution brute des images capturées par le capteur
+      width : #Largeur (pixels) (int)
+      height : #Hauteur (pixels) (int)
+    bit_depth : #Nombre de bits utilisés pour représenter la couleur de chaque pixel. Valeurs possibles: 10 ou 12 (bits) (int)
+
+  #Paramètres nommage
+  naming :
+    image_name : 'StationFac_L1_ImageCiel_{timestamp}.jpg' #Nom du fichier image avec timestamp
+    timestamp : '%Y%m%d%H%M%S' #Format du timestamp
+
+  brightness_threshold : 0 #Seuil de luminosité pour refuser une capture (lux) (int)
+
+  #Paramètres mode nuit
+  night_mode : 
+    enabled : true #Activer le mode nuit (bool)
+    delay : #Delai entre deux captures la nuit (secondes) (int)
+    start_hour : 20 #Heure de début du mode nuit (heures) (int)
+    end_hour : 6 #Heure de fin du mode nuit (heures) (int)
