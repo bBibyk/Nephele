@@ -58,8 +58,8 @@ class Sensor:
     def __get_path(self):
         
         try:
-            timestamp : str = time.strftime("%Y%m%d%H%M%S", self.module_time)
-            image_name_format : str = self.configurations['module']['format']['image_name']
+            timestamp : str = time.strftime(self.configurations['module']['naming']['timestamp'], self.module_time)
+            image_name_format : str = self.configurations['module']['naming']['image_name']
             image_name : str = self.module_time_specifier + image_name_format.format(timestamp=timestamp)
             image_path = get_script_directory()+self.configurations['module']['shots'] + image_name  
             return image_path, image_name
@@ -69,16 +69,16 @@ class Sensor:
     def capture_image(self):
         
         image_path, image_name = self.__get_path()
-        if not self.picam2.started:
-            logger("Sensor", "Camera preview is not active.")
-            return
+        # if not self.picam2.started:
+        #     logger("Sensor", "Camera preview is not active.")
+        #     return
             
         try:    
             self.metadata = self.picam2.capture_file(image_path)
             logger("Sensor", f"Image captured: {image_name}")
-            if not self.check_brightness():
-                remove(image_path)
-                logger("Sensor", f"Brightness does not satistfy the given threshold. Image deleted: {image_name}")
+            # if not self.check_brightness():
+            #     remove(image_path)
+            #     logger("Sensor", f"Brightness does not satistfy the given threshold. Image deleted: {image_name}")
         except Exception as e:
             logger("Sensor", "Error during capture.", e)
             self.close()
