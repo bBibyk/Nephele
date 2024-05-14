@@ -48,17 +48,19 @@ def sync_config():
     if connection.connect():
         connection.send_request("<PARA>")
         configurations = connection.recv_configurations()
-        print(configurations)
+        print("recv", configurations)
         connection.disconnect_client()
-        sensor.update_configurations(configurations)
         logger("Main", "Connection established. Updating configurations.")
+        sensor.update_configurations(configurations)
     else:
         connection.disconnect_client()
         logger("Main", "Connection failed. Couldn't upload new configurations.")
         
     
 def send_photo():
-    path = get_script_directory()+configurations['module']['shots']
+    print("send", configurations)
+    
+    path = get_script_directory() + configurations['module']['shots']
     dirs = os.listdir(path)
     for file in dirs:
         if connection.connect:
