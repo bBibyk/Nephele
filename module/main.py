@@ -48,6 +48,7 @@ def sync_config():
     if connection.connect():
         connection.send_request("<PARA>")
         configurations = connection.recv_configurations()
+        print(configurations)
         connection.disconnect_client()
         sensor.update_configurations(configurations)
         logger("Main", "Connection established. Updating configurations.")
