@@ -1,14 +1,17 @@
 import module.connexion_server as cs 
 import module.sensor as ss
 import signal
-import threading
+import os
 from utils import *
 from time import sleep
 
-configs = None
-pc_time = None
-delay = configs['module']['delay']
-sync_delay = configs['module']['clock']['sync_interval']
+
+
+configurations = load_configurations("default.yaml")
+pc_time = time.time()
+delay = configurations['module']['delay']
+time_interval = configurations['module']['clock']['time_interval']
+config_interval = configurations['module']['clock']['conf_interval']
 
 def sigint_handler(sig, frame):
     logger("Main", "Exiting...")
@@ -18,64 +21,76 @@ def sigint_handler(sig, frame):
     
 def sigalrm_handler(sig, frame):
     sensor.capture_image()
+    signal.alarm(delay)
+
     
-def sync():
+def sync_time():
     global pc_time
-    while True:
+    if connection.connect():
         pc_time = connection.recv_time()
+        connection.disconnect_client()
         sensor.sync_time(pc_time)
-        sleep(sync_delay)
+        logger("Main", "Connection established. Synchronizing time.")
+    else:
+        logger("Main", "Connection failed. Couldn't synchronize time.")
     
+    
+def sync_config():
+    global configurations
+    
+    #TODO loop until config parameter
+    if connection.connect():
+        configurations = connection.recv_configurations()
+        connection.disconnect_client()
+        sensor.update_configurations(configurations)
+        logger("Main", "Connection established. Updating configurations.")
+    else:
+        
+        logger("Main", "Connection failed. Couldn't update configurations.")
+    
+
 def capture():
+    
+    sync_time_counter = time_interval
+    sync_config_counter = config_interval
     while True:
-        signal.alarm(delay)
+        sigalrm_handler()
+        sync_config_counter +=1
+        sync_time_counter +=1
+        
+        if sync_config_counter >= config_interval:
+            sync_config()
+            sync_config_counter = 0
+            
+        if sync_time_counter >= time_interval:
+            sync_time()
+            sync_time_counter = 0
+        send_photo()
         signal.pause()
         
-def send():
-    send_photo()
-    
 def send_photo(filename : str):
-    #TODO
-    pass
+    path = get_script_directory()+configurations['module']['shots']
+    dirs = os.listdir(path)
+    for file in dirs:
+        send_photo(file)
+        os.remove(file)
 
 # Entity creation
 connection = cs.Connexion()
-sensor = ss.Sensor(configurations=configs, pc_time=pc_time)
+sensor = ss.Sensor(configurations=configurations, pc_time=pc_time)
+
 #Handle signal
-
-#While loop TODO
-connection.connect()
-configs = connection.recv_configurations()
-connection.disconnect_client()
-
-#for i in range(config_update_frequency):
-connection.connect()
-pc_time = connection.recv_time()
-connection.disconnect_client()
-#TODO reste du script...
+signal.signal(signal.SIGALRM, sigalrm_handler)
 
 #Starting camera
 sensor.start_camera()
 
-signal.signal(signal.SIGALRM, sigalrm_handler)
-
-synchronizing_thread = threading.Thread(target=sync)
-capturing_thread = threading.Thread(target=capture)
-sending_thread = threading.Thread(target=send)
-
-synchronizing_thread.start()
-capturing_thread.start()
-sending_thread.start()
-
-#Exiting
-
-#Waiting untill all threads join
-synchronizing_thread.join()
-capturing_thread.join()
-sending_thread.join()
+capture()
 
 #Closing camera
 sensor.close()
+
+connection.disconnect()
 
         
 #send_photo('./shots/*')
