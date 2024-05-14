@@ -20,7 +20,7 @@ client :
 #Paramètres module
 module :
   shots : /shots/
-  delay : 10 #Delai entre deux captures (secondes) (int)
+  delay : 5 #Delai entre deux captures (secondes) (int)
 
   clock:
     time_interval : 2  #Synchroniser l'horloge toutes les (sync_interval) captures (int)

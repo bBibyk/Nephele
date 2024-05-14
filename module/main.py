@@ -21,7 +21,6 @@ def sigint_handler(sig, frame):
     
 def sigalrm_handler(sig, frame):
     sensor.capture_image()
-    signal.alarm(delay)
 
     
 def sync_time():
@@ -32,7 +31,8 @@ def sync_time():
         sensor.sync_time(pc_time)
         logger("Main", "Connection established. Synchronizing time.")
     else:
-        sensor.sync_time(time.time())
+        pc_time = time.time()
+        sensor.sync_time(pc_time)
         logger("Main", "Connection failed. Couldn't synchronize time.")
     
     
@@ -47,7 +47,7 @@ def sync_config():
         logger("Main", "Connection established. Updating configurations.")
     else:
         
-        logger("Main", "Connection failed. Couldn't update configurations.")
+        logger("Main", "Connection failed. Couldn't upload new configurations.")
     
 
 def capture():
@@ -55,7 +55,7 @@ def capture():
     sync_time_counter = time_interval
     sync_config_counter = config_interval
     while True:
-        sigalrm_handler(None, None)
+        signal.alarm(delay)
         sync_config_counter +=1
         sync_time_counter +=1
         
@@ -73,7 +73,7 @@ def send_photo(filename : str):
     path = get_script_directory()+configurations['module']['shots']
     dirs = os.listdir(path)
     for file in dirs:
-        send_photo(file)
+        connection.send_photo(file)
         os.remove(file)
 
 # Entity creation
