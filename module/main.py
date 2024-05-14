@@ -14,11 +14,11 @@ time_interval = configurations['module']['clock']['time_interval']
 config_interval = configurations['module']['clock']['conf_interval']
 
 def sigint_handler(sig, frame):
-    global connection
+    global connection, sensor
     
-    sensor.close()
     connection.disconnect_client()
     connection.disconnect()
+    sensor.close()
     logger("Main", "Exiting...")
     exit()
     
@@ -87,8 +87,6 @@ signal.signal(signal.SIGINT, sigint_handler)
 # Entity creation
 connection = cs.Connection()
 sensor = ss.Sensor(configurations=configurations, pc_time=pc_time)
-
-
 
 #Starting camera
 sensor.start_camera()
