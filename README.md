@@ -1,57 +1,81 @@
 # Projet - Néphélé
 
 ---
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
 - [Projet - Néphélé](#projet---néphélé)
-  - [Identification du projet](#identification-du-projet)
-  - [Préparation du matériel](#préparation-du-matériel)
-    - [Client](#client)
-      - [Dépendances](#dépendances)
-      - [Configuration](#configuration)
-    - [Module](#module)
-      - [Dépendances](#dépendances-1)
-      - [Configuration](#configuration-1)
-  - [Téléchargement des scripts](#téléchargement-des-scripts)
-    - [Client](#client-1)
-    - [Module](#module-1)
-  - [Utilisation](#utilisation)
-    - [Paramètrage du module](#paramètrage-du-module)
-    - [Lancement](#lancement)
+  - [I - Identification du projet](#i---identification-du-projet)
+  - [II - Préparation du matériel](#ii---préparation-du-matériel)
+    - [II.1 - Client](#ii1---client)
+      - [II.1.a - Configuration](#ii1a---configuration)
+      - [II.1.b - Scripts](#ii1b---scripts)
+      - [II.1.c - Dépendances](#ii1c---dépendances)
+    - [II.2 - Module](#ii2---module)
+      - [II.2.a - Configuration](#ii2a---configuration)
+      - [II.2.b - Scripts](#ii2b---scripts)
+      - [II.2.c -  Dépendances](#ii2c----dépendances)
+  - [III - Utilisation](#iii---utilisation)
+    - [III.1 - Paramètrage](#iii1---paramètrage)
+    - [III.2 - Lancement](#iii2---lancement)
+    - [III.3 - Erreurs](#iii3---erreurs)
+
+<!-- /code_chunk_output -->
+
+
 ---
 
-## Identification du projet
 
-<p style="text-align: justify;">Le projet neOCampus de l'université Paul Sabatier a été étendu pour améliorer la station environnementale existante. Dans cette optique, un ajout crucial consiste à intégrer un appareil photo sur une carte Raspberry Pi-4, équipé d'une optique fish-eye, afin de compléter la collecte de données météorologiques.</p>
+
+
+## I - Identification du projet
+
+Le projet **neOCampus** de l'université Paul Sabatier a été étendu pour améliorer la station environnementale existante. Dans cette optique, un ajout crucial consiste à intégrer un appareil photo sur une carte Raspberry Pi-4, équipée d'une optique fish-eye, afin de compléter la collecte de données météorologiques.
 
 Membres du groupe :
-- Bibyk Bogdan
-- Zerkani Yanis
 
-Nous avons intitulé le projet "Néphélé" :cloud:
+- **Bibyk Bogdan**  
+- **Zerkani Yanis**
 
-## Préparation du matériel
+Nous avons intitulé ce projet **"Néphélé"**. :cloud:
 
-### Client
+## II - Préparation du matériel
 
-L'**ordinateur client** doit fonctionner sur un système d'exploitation Linux. Les bibliothèques contenues dans le fichier **client/requirements_client.txt** doivent être installées au préalable.
+Pour commencer, le matériel nécéssite une préparation au préalable du déploiement. Dans les 6 paragraphes suivant nous allons détailler les manipulations à réaliser côté client et côté module.
 
-#### Dépendances
+### II.1 - Client
 
+L'**ordinateur d'acquisition** doit fonctionner sous un système d'exploitation **Linux**. Nous allons volontairement omettre la partie de préparation de l'OS, car elle dépend de votre configuration.
+
+#### II.1.a - Configuration
+
+- **Configurer** une **adresse IP statique** sur l'interface qui sera utilisée pour la communication avec le module. La démarche à suivre dépend de l'entité qui contrôle l'attribution des IP dans le système que vous utilisez pour l'ordinateur d'acquisition.
+- **Créer** un répertoire de **dépot** où seront stockées les photos.
+
+#### II.1.b - Scripts
+
+- **Cloner** tous les **scripts** client sur l'ordinateur :
+```
+git init
+git remote add -f origin "https://github.com/bBibyk/Nephele.git"
+git config core.sparseCheckout true
+echo "client/" >> .git/info/sparse-checkout
+git pull origin main
+```
+
+#### II.1.c - Dépendances
+
+- **Installer** les **bibliothèques** python nécessaires, depuis ```client/``` :
+```
 python -m pip install -r requirements_client.txt
+```
+- **Mettre en place**  //TODO
 
-#### Configuration
+### II.2 - Module
 
-Il faut aussi configurer une adresse IP statique sur l'interface qui sera utilisée pour la communication avec le module. Dans notre cas c'est l'interface eth0.
-
-Pour cela il faut modifier le fichier de configuration du démon DHCPCD du système en 3 étapes:
- - Lancer la commande ```sudo nano /etc/dhcpcd.conf```
- - Ecrire :
-  interface eth0
-  static ip_address=10.0.0.10/24
- - Lancer la commande ```sudo reboot```
-
-### Module
-
-Les éléments suivants seront nécessaires pour faire fonctionner le module:
+Les éléments suivants seront nécessaires pour faire fonctionner le module :
 
  - **Carte Raspberry Pi**. Ce projet sera réalisé avec une carte Raspberry Pi 4, mais une autre version pourra être utilisée
  - **Alimentation USB-C** compatible avec la carte Raspberry Pi
@@ -60,33 +84,64 @@ Les éléments suivants seront nécessaires pour faire fonctionner le module:
  - **Module caméra haute qualité**
  - **Objectif fisheye**
 
-#### Dépendances
+#### II.2.a - Configuration
 
-python -m pip install -r requirements_module.txt
-
-#### Configuration
-
- 1. Se rendre sur le site officiel https://www.raspberrypi.com/software/, et télécharger puis installer l'outil d'imagerie **Raspberry Pi Os**
- 2. Inserer la carte SD et lancer l'outil d'imagerie. Inserer la carte microSD dans le Raspberry Pi une fois l'écriture terminée, le demarrer et suivre les instructions à l'écran pour configurer l'Os
- 3. Une fois l'installation terminée, ouvrir un terminal et executer les commandes suivantes afin de mettre à jour le système:
+- **Installer** sur le module le système d'exploitation **Raspberry Pi OS Bookworm**.
+  
+- **Mettre à jour apt** :
   ```
   sudo apt update
   sudo apt upgrade
   ```
+- **Installer** sur le module le **démon DHCPCD** :
+  ```
+  sudo apt-get install dhcpcd5
+  ```
+- **Configurer** une **adresse IP statique** sur l'interface qui sera utilisée pour la communication avec le module. Dans notre cas c'est l'interface ```eth0```.
+   - Lancer la commande :
+  ```
+  sudo nano /etc/dhcpcd.conf
+  ```
+   - Ecrire :
+  ```
+  interface eth0
+  static ip_address=10.0.0.10/24
+  ```
+   - Sauvegarder.
+   - Redémarer le système.
 
-## Téléchargement des scripts
 
-### Client
-
-### Module
-
-\\TODO script bash pour le lancement automatique coté module
-\\TODO how to venv // pip install
-
-## Utilisation
-
-### Paramètrage du module
-
+Et enfin
 \\TODO dependances apt?
 
-### Lancement
+#### II.2.b - Scripts
+
+- **Cloner** tous les **scripts** client sur l'ordinateur :
+```
+git init
+git remote add -f origin "https://github.com/bBibyk/Nephele.git"
+git config core.sparseCheckout true
+echo "module/" >> .git/info/sparse-checkout
+git pull origin main
+```
+
+#### II.2.c -  Dépendances
+
+- **Installer** les **bibliothèques** python nécessaires, depuis ```module/``` :
+```
+python -m pip install -r requirements_module.txt
+```
+
+\\TODO script bash pour le lancement automatique coté module
+
+## III - Utilisation
+
+Dans les
+
+### III.1 - Paramètrage
+
+### III.2 - Lancement
+
+### III.3 - Erreurs
+
+Le développement du module a été orienté sur une gestion maximale des exception et un systèmes de secours a été conçu pour permettre la reprise de l'algorithme distribué en cas de terminaison non attendue.
