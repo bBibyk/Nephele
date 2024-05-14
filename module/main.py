@@ -32,6 +32,7 @@ def sync_time():
         sensor.sync_time(pc_time)
         logger("Main", "Connection established. Synchronizing time.")
     else:
+        sensor.sync_time(time.time())
         logger("Main", "Connection failed. Couldn't synchronize time.")
     
     
