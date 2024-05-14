@@ -8,7 +8,6 @@ class Sensor:
         self.update_configurations(configurations)
         self.sync_time(pc_time)
         self.picam2=Picamera2()
-        self.metadata = None
         self.module_time_specifier = ""
     
     def update_configurations(self, configurations):
@@ -69,24 +68,27 @@ class Sensor:
     def capture_image(self):
         
         image_path, image_name = self.__get_path()
-        # if not self.picam2.started:
-        #     logger("Sensor", "Camera preview is not active.")
-        #     return
+        metadata = None
+        if not self.picam2.started:
+            self.start_camera()
             
         try:    
-            self.metadata = self.picam2.capture_file(image_path)
+            metadata = self.picam2.capture_file(image_path)
             logger("Sensor", f"Image captured: {image_name}")
-            if not self.check_brightness():
+            if not self.check_brightness(metadata):
                 os.remove(image_path)
                 logger("Sensor", f"Brightness does not satistfy the given threshold. Image deleted: {image_name}")
         except Exception as e:
             logger("Sensor", "Error during capture.", e)
             self.close()
+        
+        return metadata
 
-    def check_brightness(self):
-        if self.metadata is not None:
+
+    def check_brightness(self, metadata):
+        if metadata is not None:
             brightness_threshold = self.configurations['module']['brightness_threshold']
-            if self.metadata['Lux']>brightness_threshold:
+            if metadata['Lux']>brightness_threshold:
                 return True
         return False
     
