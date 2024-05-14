@@ -1,27 +1,27 @@
-import connexion_client as cc
+import connection_client as cc
 import signal
 from utils import *
 import time
 
 def sigint_handler(sig, frame):
-    global connexion
+    global connection
+    connection.disconnect()
     logger("Main", "Exiting...")
-    connexion.disconnect()
     exit()
 
 signal.signal(signal.SIGINT, sigint_handler)
     
-connexion = cc.Connexion()
+connection = cc.Connection()
 connected = False
 
 
 while True :
     try:
-        connected = connexion.connect()
+        connected = connection.connect()
         if connected:
-            connexion.request()
-            connexion.disconnect()
+            connection.request()
+            connection.disconnect()
         else:
             time.sleep(5)
     except Exception as e:
-        logger("Main", "Unexpected exception", e)
+        logger("Main", "Unexpected exception.", e)
