@@ -56,7 +56,7 @@ def sync_config():
         logger("Main", "Connection failed. Couldn't upload new configurations.")
         
     
-def send_photo(filename : str):
+def send_photo():
     path = get_script_directory()+configurations['module']['shots']
     dirs = os.listdir(path)
     for file in dirs:
