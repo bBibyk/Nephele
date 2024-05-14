@@ -20,11 +20,11 @@ client :
 #Paramètres module
 module :
   shots : /shots/
-  delay : 300 #Delai entre deux captures (secondes) (int)
+  delay : 10 #Delai entre deux captures (secondes) (int)
 
   clock:
-    time_interval : 5  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
-    conf_interval : 30 #Synchroniser la configuration toutes les (conf_interval) captures (int)
+    time_interval : 2  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
+    conf_interval : 3 #Synchroniser la configuration toutes les (conf_interval) captures (int)
 
   #Paramètres capteur
   sensor :
@@ -38,7 +38,7 @@ module :
     image_name : 'StationFac_L1_ImageCiel_{timestamp}.jpg' #Nom du fichier image avec timestamp
     timestamp : '%Y%m%d%H%M%S' #Format du timestamp
 
-  brightness_threshold : 200 #Seuil de luminosité pour refuser une capture (lux) (int)
+  brightness_threshold : 10 #Seuil de luminosité pour refuser une capture (lux) (int)
 
   #Paramètres mode nuit
   night_mode : 
