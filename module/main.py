@@ -16,7 +16,9 @@ config_interval = configurations['module']['clock']['conf_interval']
 def sigint_handler(sig, frame):
     logger("Main", "Exiting...")
     sensor.close()
+    connection.disconnect_client()
     connection.disconnect()
+    exit()
     # TODO : sortir correctement
     
 def sigalrm_handler(sig, frame):
@@ -82,6 +84,8 @@ sensor = ss.Sensor(configurations=configurations, pc_time=pc_time)
 
 #Handle signal
 signal.signal(signal.SIGALRM, sigalrm_handler)
+signal.signal(signal.SIGINT, sigint_handler)
+
 
 #Starting camera
 sensor.start_camera()
