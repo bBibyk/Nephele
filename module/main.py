@@ -54,7 +54,7 @@ def capture():
     sync_time_counter = time_interval
     sync_config_counter = config_interval
     while True:
-        sigalrm_handler()
+        sigalrm_handler(None, None)
         sync_config_counter +=1
         sync_time_counter +=1
         
