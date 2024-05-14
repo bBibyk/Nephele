@@ -39,20 +39,6 @@ class Sensor:
             
         else:
             logger("Sensor", "Picamera preview already started.")
-
-    def quick_capture(self):
-        image_name = "Test.jpg"
-        image_path = get_script_directory()+self.configurations['module']['shots'] + image_name
-        try:    
-            if self.picam2.started:
-                self.picam2.stop()
-            self.picam2.start_and_capture_file(image_path)
-            logger("Sensor", f"Test image captured: {image_name}")
-            self.close()
-        
-        except Exception as e:
-            logger("Sensor", "Error during test image capture.", e)
-            self.close()
         
     def __get_path(self):
         
@@ -110,7 +96,6 @@ if __name__ == '__main__':
     test_time = time.time()
     
     sensor = Sensor(configurations=configurations, pc_time=test_time)
-    # sensor.quick_capture()
 
     print("Test classic capture")
     sensor.start_camera()
