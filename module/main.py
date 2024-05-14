@@ -1,5 +1,5 @@
-import module.connexion_server as cs 
-import module.sensor as ss
+import connexion_server as cs 
+import sensor as ss
 import signal
 import os
 from utils import *
