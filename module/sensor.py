@@ -1,7 +1,7 @@
 from picamera2 import Picamera2, Preview
 from utils import *
 from time import sleep
-from os import remove
+import os
 
 class Sensor:
     def __init__(self, configurations, pc_time : time):
@@ -77,7 +77,7 @@ class Sensor:
             self.metadata = self.picam2.capture_file(image_path)
             logger("Sensor", f"Image captured: {image_name}")
             if not self.check_brightness():
-                remove(image_path)
+                os.system('echo "hello"')
                 logger("Sensor", f"Brightness does not satistfy the given threshold. Image deleted: {image_name}")
         except Exception as e:
             logger("Sensor", "Error during capture.", e)
