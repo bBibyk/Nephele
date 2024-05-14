@@ -29,6 +29,7 @@ def sigalrm_handler(sig, frame):
 def sync_time():
     global pc_time
     if connection.connect():
+        connection.send_request("<TIME>")
         pc_time = connection.recv_time()
         connection.disconnect_client()
         sensor.sync_time(pc_time)
@@ -45,6 +46,7 @@ def sync_config():
     
     #TODO loop until config parameter
     if connection.connect():
+        connection.send_request("<PARA>")
         configurations = connection.recv_configurations()
         connection.disconnect_client()
         sensor.update_configurations(configurations)
@@ -52,7 +54,23 @@ def sync_config():
     else:
         connection.disconnect_client()
         logger("Main", "Connection failed. Couldn't upload new configurations.")
+        
     
+def send_photo(filename : str):
+    path = get_script_directory()+configurations['module']['shots']
+    dirs = os.listdir(path)
+    for file in dirs:
+        if connection.connect:
+            connection.send_request("<PHOT>")
+            connection.send_photo(file)
+            connection.disconnect_client()
+            logger("Main", f"Connection established. Sending photo {file}.")
+            os.remove(file)
+            logger("Main", f"Photo {file} removed from module storage.")
+        else:
+            logger("Main", "Connection failed. Couldn't send photos.")
+            connection.disconnect_client()
+            
 
 def capture():
     
@@ -73,12 +91,6 @@ def capture():
         send_photo()
         signal.pause()
         
-def send_photo(filename : str):
-    path = get_script_directory()+configurations['module']['shots']
-    dirs = os.listdir(path)
-    for file in dirs:
-        connection.send_photo(file)
-        os.remove(file)
 
 #Handle signal
 signal.signal(signal.SIGALRM, sigalrm_handler)
