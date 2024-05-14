@@ -1,4 +1,4 @@
-import connexion_server as cs 
+import connection_server as cs 
 import sensor as ss
 import signal
 import os
@@ -14,12 +14,13 @@ time_interval = configurations['module']['clock']['time_interval']
 config_interval = configurations['module']['clock']['conf_interval']
 
 def sigint_handler(sig, frame):
-    logger("Main", "Exiting...")
+    global connection
+    
     sensor.close()
     connection.disconnect_client()
     connection.disconnect()
+    logger("Main", "Exiting...")
     exit()
-    # TODO : sortir correctement
     
 def sigalrm_handler(sig, frame):
     sensor.capture_image()
@@ -33,6 +34,7 @@ def sync_time():
         sensor.sync_time(pc_time)
         logger("Main", "Connection established. Synchronizing time.")
     else:
+        connection.disconnect_client()
         pc_time = time.time()
         sensor.sync_time(pc_time)
         logger("Main", "Connection failed. Couldn't synchronize time.")
@@ -48,7 +50,7 @@ def sync_config():
         sensor.update_configurations(configurations)
         logger("Main", "Connection established. Updating configurations.")
     else:
-        
+        connection.disconnect_client()
         logger("Main", "Connection failed. Couldn't upload new configurations.")
     
 
@@ -78,13 +80,14 @@ def send_photo(filename : str):
         connection.send_photo(file)
         os.remove(file)
 
-# Entity creation
-connection = cs.Connexion()
-sensor = ss.Sensor(configurations=configurations, pc_time=pc_time)
-
 #Handle signal
 signal.signal(signal.SIGALRM, sigalrm_handler)
 signal.signal(signal.SIGINT, sigint_handler)
+
+# Entity creation
+connection = cs.Connection()
+sensor = ss.Sensor(configurations=configurations, pc_time=pc_time)
+
 
 
 #Starting camera
