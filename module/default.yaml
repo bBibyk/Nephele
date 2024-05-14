@@ -38,7 +38,7 @@ module :
     image_name : 'StationFac_L1_ImageCiel_{timestamp}.jpg' #Nom du fichier image avec timestamp
     timestamp : '%Y%m%d%H%M%S' #Format du timestamp
 
-  brightness_threshold : 0 #Seuil de luminosité pour refuser une capture (lux) (int)
+  brightness_threshold : 200 #Seuil de luminosité pour refuser une capture (lux) (int)
 
   #Paramètres mode nuit
   night_mode : 

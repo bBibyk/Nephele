@@ -76,9 +76,9 @@ class Sensor:
         try:    
             self.metadata = self.picam2.capture_file(image_path)
             logger("Sensor", f"Image captured: {image_name}")
-            # if not self.check_brightness():
-            #     remove(image_path)
-            #     logger("Sensor", f"Brightness does not satistfy the given threshold. Image deleted: {image_name}")
+            if not self.check_brightness():
+                remove(image_path)
+                logger("Sensor", f"Brightness does not satistfy the given threshold. Image deleted: {image_name}")
         except Exception as e:
             logger("Sensor", "Error during capture.", e)
             self.close()
