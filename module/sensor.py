@@ -11,8 +11,7 @@ class Sensor:
         self.module_time_specifier = ""
     
     def update_configurations(self, configurations):
-        
-        self.configurations = None
+
         if configurations is not None:
             self.configurations = configurations
             logger("Sensor","Configurations loaded.")

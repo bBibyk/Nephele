@@ -79,6 +79,7 @@ class Connection:
         if data is not None:
             logger("Connection", "Configurations received.")
             data = data.decode("utf-8").replace("\'", "\"")
+            print(data)
             try :
                 data = json.loads(fr"{data}")
             except Exception as e:
