@@ -77,7 +77,7 @@ class Sensor:
             self.metadata = self.picam2.capture_file(image_path)
             logger("Sensor", f"Image captured: {image_name}")
             if not self.check_brightness():
-                os.system('echo "hello"')
+                os.remove(image_path)
                 logger("Sensor", f"Brightness does not satistfy the given threshold. Image deleted: {image_name}")
         except Exception as e:
             logger("Sensor", "Error during capture.", e)
@@ -85,7 +85,7 @@ class Sensor:
 
     def check_brightness(self):
         if self.metadata is not None:
-            brightness_threshold = self.configurations['sensor']['brightness_threshold']
+            brightness_threshold = self.configurations['module']['brightness_threshold']
             if self.metadata['Lux']>brightness_threshold:
                 return True
         return False
