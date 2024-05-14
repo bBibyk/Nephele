@@ -115,6 +115,6 @@ if __name__ == '__main__':
     for i in range(3):
         sensor.sync_time(time.time())
         sensor.capture_image()
-        print(sensor.metadata)
+        print(sensor.metadata['Lux'])
         sleep(3)
     sensor.close()
