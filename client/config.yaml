@@ -9,7 +9,7 @@
 #Paramètres réseau local
 network :
   server :
-    host : localhost #L'adresse IP du module, doit correspondre à l'adresse indiquée dans default.yaml
+    host : 10.0.0.20 #L'adresse IP du module, doit correspondre à l'adresse indiquée dans default.yaml
     port : 4202 #Le port du serveur, doit correspondre au port indiqué dans default.yaml
 
 #Paramètres client
@@ -20,7 +20,7 @@ client :
 #Paramètres module
 module :
   shots : /shots/
-  delay : 10 #Delai entre deux captures (secondes) (int)
+  delay : 5 #Delai entre deux captures (secondes) (int)
 
   clock:
     time_interval : 2  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
