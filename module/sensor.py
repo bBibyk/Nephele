@@ -31,7 +31,7 @@ class Sensor:
             try:
                 size = self.configurations['module']['sensor']['output_size']
                 bit_depth = self.configurations['module']['sensor']['output_size']
-                config = self.picam2.create_preview_configuration(sensor={'output_size': size, 'bit_depth': bit_depth})
+                config = self.picam2.create_preview_configuration(sensor={'output_size': (4056, 3040), 'bit_depth': 12})
                 self.picam2.configure(config)
                 self.picam2.start_preview(Preview.DRM)
                 self.picam2.start()
