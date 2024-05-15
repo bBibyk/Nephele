@@ -48,10 +48,13 @@ def sync_config():
     #TODO loop until config parameter
     if connection.connect():
         connection.send_request("<PARA>")
-        configurations = connection.recv_configurations()
+        tmp_configuration = connection.recv_configurations()
+        if tmp_configuration is not None:
+            configurations = tmp_configuration
+            sensor.update_configurations(configurations)
+            
         connection.disconnect_client()
         logger("Main", "Connection established. Updating configurations.")
-        sensor.update_configurations(configurations)
     else:
         connection.disconnect_client()
         logger("Main", "Connection failed. Couldn't upload new configurations.")
