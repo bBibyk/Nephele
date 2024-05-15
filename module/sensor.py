@@ -26,15 +26,22 @@ class Sensor:
             self.module_time = time.localtime(pc_time)
             self.module_time_specifier=""
             
+    def __update_still_configurations(self):
+        try:
+            width = self.configurations['module']['sensor']['output_size']['width']
+            size = (width, int(width // (4/3)))
+            bit_depth = self.configurations['module']['sensor']['bit_depth']
+
+            still_configurations = self.picam2.create_still_configuration(sensor={'output_size': size, 'bit_depth': bit_depth})
+            self.picam2.configure(still_configurations)
+        except Exception as e:
+            logger("Sensor","Couldn't update still configurations.")
+        
+            
     def start_camera(self):
         if not self.picam2.started:
             try:
-                width = self.configurations['module']['sensor']['output_size']['width']
-                size = (width, int(width // (4/3)))
-                bit_depth = self.configurations['module']['sensor']['bit_depth']
-
-                still_configurations = self.picam2.create_still_configuration(sensor={'output_size': size, 'bit_depth': bit_depth})
-                self.picam2.configure(still_configurations)
+                self.__update_still_configurations()
                 self.picam2.start()
                 sleep(1)
                 logger("Sensor", "Picamera initialized.")
@@ -59,6 +66,7 @@ class Sensor:
         
         image_path, image_name = self.__get_path()
         metadata = None
+        self.__update_still_configurations()
         if not self.picam2.started:
             self.start_camera()
             
