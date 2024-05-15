@@ -118,8 +118,11 @@ class Connection:
             return False
 
     def disconnect_client(self):
-        self.__client_socket.close()
-        logger("Connection", "Clinet socket closed.")
+        try:
+            self.__client_socket.close()
+            logger("Connection", "Clinet socket closed.")
+        except Exception as e:
+            logger("Connection", "Unable to close client socket.", e)
     
     def disconnect(self):
         self.__socket.close()
