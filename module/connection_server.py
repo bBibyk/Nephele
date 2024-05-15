@@ -8,6 +8,7 @@ class Connection:
         self.update_configurations()
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.__socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.__socket.timeout(6)
         self.__socket.bind((self.configurations["network"]["server"]["host"], self.configurations["network"]["server"]["port"]))
 
     def update_configurations(self):

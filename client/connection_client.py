@@ -94,8 +94,8 @@ class Connection:
         try :
             filename = self.__recv_until_end(1).decode("utf-8")
             filedata = self.__recv_until_end()
-            path = self.configurations["client"]["storage_path"]
-            with open(path + "/" + filename, "wb") as file:
+            path = get_script_directory() + self.configurations["client"]["storage_path"]
+            with open(path + filename, "wb") as file:
                 file.write(filedata)
                 file.close()
             logger("Connection", "Photo received.")

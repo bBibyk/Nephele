@@ -3,7 +3,6 @@
 # ! Ne pas modifier les noms de variables !
 # Les valeurs peuvent être mdifiées selon les préférences.
 # Les indentations doivent être respectées strictement.
-# Les variables ne doivent pas contenir d'apostrophes ('').
 # Toutes les variables les plus indentées doivent avoir une valeur.
 # --------------------------------------------------------------
 
@@ -16,13 +15,13 @@ network :
 
 #Paramètres client
 client :
-  depot : /depot/
+  storage_path : /depot/ #Attention, chemin absolu nécessaire avec '/' à la fin.
 
 
 #Paramètres module
 module :
-  shots : /shots/
-  delay : 5 #Delai entre deux captures (secondes) (int)
+  shots : /shots/ #Attention, chemin absolu nécessaire avec '/' à la fin.
+  delay : 10 #Delai entre deux captures (secondes) (int)
 
   clock:
     time_interval : 2  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
