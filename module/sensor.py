@@ -27,15 +27,14 @@ class Sensor:
             self.module_time_specifier=""
             
     def start_camera(self):
-        if not self.picam2.started:  
+        if not self.picam2.started:
             try:
                 width = self.configurations['module']['sensor']['output_size']['width']
                 size = (width, int(width // (4/3)))
                 bit_depth = self.configurations['module']['sensor']['bit_depth']
 
-                config = self.picam2.create_still_configuration(sensor={'output_size': size, 'bit_depth': bit_depth})
-                self.picam2.configure(config)
-                self.picam2.start_preview(Preview.DRM)
+                still_configurations = self.picam2.create_still_configuration(sensor={'output_size': size, 'bit_depth': bit_depth})
+                self.picam2.configure(still_configurations)
                 self.picam2.start()
                 sleep(1)
                 logger("Sensor", "Picamera initialized.")
