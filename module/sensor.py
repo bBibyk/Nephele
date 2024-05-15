@@ -33,9 +33,9 @@ class Sensor:
                 # bit_depth = self.configurations['module']['sensor']['output_size']
                 
                 mode = self.picam2.sensor_modes[3]
-                config = self.picam2.create_still_configuration({'size': mode['size']})
+                config = self.picam2.create_still_configuration(sensor={'output_size': mode['size'], 'bit_depth': mode['bit_depth']})
                 self.picam2.configure(config)
-                #self.picam2.start_preview(Preview.)
+                self.picam2.start_preview(Preview.DRM)
                 self.picam2.start()
                 sleep(1)
                 logger("Sensor", "Picamera initialized.")
