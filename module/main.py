@@ -59,20 +59,23 @@ def sync_config():
     
 def send_photo():
     
-        if connection.connect:
+    
+    path = get_script_directory() + configurations['module']['shots']
+    dirs = os.listdir(path)
+    for file in dirs:
+        if connection.connect():
             connection.send_request("<PHOT>")
-            path = get_script_directory() + configurations['module']['shots']
-            dirs = os.listdir(path)
-            for file in dirs:
-                if connection.send_photo(file):
-                    logger("Main", f"Connection established. Sending photo {file}.")
-                    os.remove(path + file)
-                    logger("Main", f"Photo {file} removed from module storage.")
+            if connection.send_photo(file):
+                logger("Main", f"Connection established. Sending photo {file}.")
+                os.remove(path + file)
+                logger("Main", f"Photo {file} removed from module storage.")
             connection.disconnect_client()
+
         else:
             logger("Main", "Connection failed. Couldn't send photos.")
             connection.disconnect_client()
             
+
 def capture():
     
     sync_time_counter = time_interval
