@@ -71,7 +71,11 @@ git pull origin main
 ```
 python -m pip install -r requirements_client.txt
 ```
-- **Mettre en place**  //TODO
+- **Mettre en place** le script de **autostart**, depuis ```client/``` :
+  ```
+  chmod +x start_client.sh
+  ```
+- **S'assurer** que le chemin dans le fichier start_client.sh est **complet et absolu**.
 
 ### II.2 - Module
 
