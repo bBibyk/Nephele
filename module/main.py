@@ -24,6 +24,7 @@ def sigint_handler(sig, frame):
     
 def sigalrm_handler(sig, frame):
     sensor.capture_image()
+    signal.alarm(delay)
 
     
 def sync_time():
@@ -58,29 +59,26 @@ def sync_config():
     
 def send_photo():
     
-    
-    path = get_script_directory() + configurations['module']['shots']
-    dirs = os.listdir(path)
-    for file in dirs:
         if connection.connect:
             connection.send_request("<PHOT>")
-            connection.send_photo(file)
+            path = get_script_directory() + configurations['module']['shots']
+            dirs = os.listdir(path)
+            for file in dirs:
+                if connection.send_photo(file):
+                    logger("Main", f"Connection established. Sending photo {file}.")
+                    os.remove(path + file)
+                    logger("Main", f"Photo {file} removed from module storage.")
             connection.disconnect_client()
-            logger("Main", f"Connection established. Sending photo {file}.")
-            file_descriptor = os.open(file, os.O_RDWR)
-            os.remove(file_descriptor)
-            logger("Main", f"Photo {file} removed from module storage.")
         else:
             logger("Main", "Connection failed. Couldn't send photos.")
             connection.disconnect_client()
             
-
 def capture():
     
     sync_time_counter = time_interval
     sync_config_counter = config_interval
+    sigalrm_handler(None, None)
     while True:
-        signal.alarm(delay)
         sync_config_counter +=1
         sync_time_counter +=1
         
