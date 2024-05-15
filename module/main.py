@@ -29,6 +29,7 @@ def sigalrm_handler(sig, frame):
     
 def sync_time():
     global pc_time
+    
     if connection.connect():
         connection.send_request("<TIME>")
         pc_time = connection.recv_time()
@@ -45,7 +46,6 @@ def sync_time():
 def sync_config():
     global configurations
     
-    #TODO loop until config parameter
     if connection.connect():
         connection.send_request("<PARA>")
         tmp_configuration = connection.recv_configurations()
@@ -60,8 +60,6 @@ def sync_config():
         
     
 def send_photo():
-    
-    
     path = get_script_directory() + configurations['module']['shots']
     dirs = os.listdir(path)
     for file in dirs:
@@ -79,7 +77,6 @@ def send_photo():
             
 
 def capture():
-    
     sync_time_counter = time_interval
     sync_config_counter = config_interval
     sigalrm_handler(None, None)
@@ -98,7 +95,7 @@ def capture():
         signal.pause()
         
 
-#Handle signal
+#Handle signals
 signal.signal(signal.SIGALRM, sigalrm_handler)
 signal.signal(signal.SIGINT, sigint_handler)
 
