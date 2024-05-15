@@ -67,7 +67,7 @@ def send_photo():
             connection.send_photo(file)
             connection.disconnect_client()
             logger("Main", f"Connection established. Sending photo {file}.")
-            file_descriptor = os.open(file, "RW")
+            file_descriptor = os.open(file, os.O_RDWR)
             os.remove(file_descriptor)
             logger("Main", f"Photo {file} removed from module storage.")
         else:
