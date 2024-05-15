@@ -52,7 +52,6 @@ def sync_config():
         if tmp_configuration is not None:
             configurations = tmp_configuration
             sensor.update_configurations(configurations)
-            
         connection.disconnect_client()
         logger("Main", "Connection established. Updating configurations.")
     else:
