@@ -10,18 +10,18 @@
 #Paramètres réseau local
 network :
   server :
-    host : 10.0.0.20 #L'adresse IP du module, doit correspondre à l'adresse indiquée dans default.yaml
+    host : 192.168.1.101 #L'adresse IP du module, doit correspondre à l'adresse indiquée dans config.yaml
     port : 4202 #Le port du serveur, doit correspondre au port indiqué dans default.yaml
 
 #Paramètres client
 client :
-  depot : /depot/
+  storage_path : /depot/ #Attention, chemin absolu nécessaire avec '/' à la fin.
 
 
 #Paramètres module
 module :
-  shots : /shots/
-  delay : 5 #Delai entre deux captures (secondes) (int)
+  shots : /shots/ #Attention, chemin absolu nécessaire avec '/' à la fin.
+  delay : 10 #Delai entre deux captures (secondes) (int)
 
   clock:
     time_interval : 2  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
@@ -31,7 +31,6 @@ module :
   sensor :
     output_size : #Resolution brute des images capturées par le capteur
       width : 0 #Largeur (pixels) (int)
-      height : 0 #Hauteur (pixels) (int)
     bit_depth : 12 #Nombre de bits utilisés pour représenter la couleur de chaque pixel. Valeurs possibles: 10 ou 12 (bits) (int)
 
   #Paramètres nommage
@@ -40,10 +39,3 @@ module :
     timestamp : '%Y%m%d%H%M%S' #Format du timestamp
 
   brightness_threshold : 10 #Seuil de luminosité pour refuser une capture (lux) (int)
-
-  #Paramètres mode nuit
-  night_mode : 
-    enabled : true #Activer le mode nuit (bool)
-    delay : 10 #Delai entre deux captures la nuit (secondes) (int)
-    start_hour : 20 #Heure de début du mode nuit (heures) (int)
-    end_hour : 6 #Heure de fin du mode nuit (heures) (int)

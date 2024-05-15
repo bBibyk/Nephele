@@ -120,7 +120,7 @@ Et enfin
 
 #### II.2.b - Scripts
 
-- **Cloner** tous les **scripts** client sur l'ordinateur :
+- **Cloner** tous les **scripts** module sur l'ordinateur :
 ```
 git init
 git remote add -f origin "https://github.com/bBibyk/Nephele.git"
