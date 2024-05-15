@@ -29,8 +29,8 @@ module :
 
   #Paramètres capteur
   sensor :
-    output_size : #Resolution brute des images capturées par le capteur
-      width : 0 #Largeur (pixels) (int)
+    output_size : '(4056, 3040)' #Resolution brute des images capturées par le capteur
+      #width : 0 #Largeur (pixels) (int)
     bit_depth : 12 #Nombre de bits utilisés pour représenter la couleur de chaque pixel. Valeurs possibles: 10 ou 12 (bits) (int)
 
   #Paramètres nommage
