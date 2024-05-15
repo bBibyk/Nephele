@@ -29,11 +29,11 @@ class Sensor:
     def start_camera(self):
         if not self.picam2.started:  
             try:
-                # size = self.configurations['module']['sensor']['output_size']
-                # bit_depth = self.configurations['module']['sensor']['output_size']
-                
-                mode = self.picam2.sensor_modes[3]
-                config = self.picam2.create_still_configuration(sensor={'output_size': mode['size'], 'bit_depth': mode['bit_depth']})
+                width = self.configurations['module']['sensor']['output_size']['width']
+                size = (width, int(width // (4/3)))
+                bit_depth = self.configurations['module']['sensor']['bit_depth']
+
+                config = self.picam2.create_still_configuration(sensor={'output_size': size, 'bit_depth': bit_depth})
                 self.picam2.configure(config)
                 self.picam2.start_preview(Preview.DRM)
                 self.picam2.start()
