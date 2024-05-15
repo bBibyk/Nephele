@@ -109,7 +109,7 @@ Les éléments suivants seront nécessaires pour faire fonctionner le module :
    - Ecrire :
   ```
   interface eth0
-  static ip_address=10.0.0.10/24
+  static ip_address=10.0.0.20/24
   ```
    - Sauvegarder.
    - Redémarer le système.

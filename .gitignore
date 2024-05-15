@@ -1,5 +1,5 @@
 module/libcamera/
-module/shots/
-client/depot/
+module/shots/*
+client/depot/*
 module/__pycache__/
 client/__pycache__/
