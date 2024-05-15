@@ -48,7 +48,6 @@ def sync_config():
     if connection.connect():
         connection.send_request("<PARA>")
         configurations = connection.recv_configurations()
-        print("recv", configurations)
         connection.disconnect_client()
         logger("Main", "Connection established. Updating configurations.")
         sensor.update_configurations(configurations)
@@ -58,7 +57,7 @@ def sync_config():
         
     
 def send_photo():
-    print("send", configurations)
+    
     
     path = get_script_directory() + configurations['module']['shots']
     dirs = os.listdir(path)
@@ -68,7 +67,8 @@ def send_photo():
             connection.send_photo(file)
             connection.disconnect_client()
             logger("Main", f"Connection established. Sending photo {file}.")
-            os.remove(file)
+            file_descriptor = os.open(file, "RW")
+            os.remove(file_descriptor)
             logger("Main", f"Photo {file} removed from module storage.")
         else:
             logger("Main", "Connection failed. Couldn't send photos.")
