@@ -76,6 +76,7 @@ class Sensor:
             if not self.check_brightness(metadata):
                 os.remove(image_path)
                 logger("Sensor", f"Brightness does not satistfy the given threshold. Image deleted: {image_name}")
+            self.stop()
         except Exception as e:
             logger("Sensor", "Error during capture.", e)
             self.close()
@@ -96,7 +97,9 @@ class Sensor:
     def enable_night_mode(args):
         pass
                 
-    
+    def stop(self):
+        self.picam2.stop()
+        
     def close(self):
         self.picam2.close()
 
