@@ -45,6 +45,6 @@ module :
   #Paramètres mode nuit
   night_mode : 
     enabled : true #Activer le mode nuit (bool)
-    delay : #Delai entre deux captures la nuit (secondes) (int)
+    delay : 10 #Delai entre deux captures la nuit (secondes) (int)
     start_hour : 20 #Heure de début du mode nuit (heures) (int)
     end_hour : 6 #Heure de fin du mode nuit (heures) (int)
