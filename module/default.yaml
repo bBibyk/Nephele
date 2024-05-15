@@ -38,7 +38,7 @@ module :
   #Paramètres nommage
   naming :
     image_name : StationFac_L1_ImageCiel_{timestamp}.jpg #Nom du fichier image avec timestamp
-    timestamp : \%Y%m%d%H%M%S #Format du timestamp
+    timestamp : '%Y%m%d%H%M%S' #Format du timestamp
 
   brightness_threshold : 10 #Seuil de luminosité pour refuser une capture (lux) (int)
 
