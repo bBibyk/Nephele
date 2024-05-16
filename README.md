@@ -140,7 +140,56 @@ python -m pip install -r requirements_module.txt
 
 ## III - Utilisation
 
-Dans les
+Ci-dessous vous trouverez une explication générale du fonctionnement du module, au cas où il y aura besoin d'intervenir pour le modifier.
+
+Le système repose sur une architecture client-serveur où la classe Client agit comme le centre de traitement qui se connecte au serveur pour écouter des demandes et recevoir des réponses. La classe Server quant à elle écoute les connexions entrantes et agit comme un demandeur de services. Le nomage peut paraître malvenu, mais il repose simplement sur les rôles, c'est-à-dire qui entamme la connexion (Client) et qui propose la connexion (Server).
+
+  Initialisation et Configuration :
+      Le module Server initialise un objet de connexion avec les configurations par défaut et prépare le socket pour écouter les connexions entrantes.
+      Le module Client initialise également un objet de connexion et met à jour les configurations à partir d'un fichier YAML.
+
+  Connexion :
+      Le module Server écoute les connexions entrantes et accepte la connexion d'un client lorsque celle-ci est établie.
+      Le module Client tente de se connecter au serveur en utilisant les configurations spécifiées.
+
+  Échange de Données :
+      Le module Server envoie des demandes au client sous forme de tags prédéfinis (comme <PARA>, <TIME>, <PHOT>) via le socket.
+      Le module Client reçoit ces demandes, les traite et envoie les réponses appropriées en fonction des tags reçus.
+
+  Traitement des Demandes :
+      Le module Client traite les demandes reçues du client en fonction des tags. Par exemple, il peut envoyer les configurations actuelles, l'heure actuelle ou des photos stockées.
+      Le module Server attend les réponses du serveur après avoir envoyé une demande et les traite en conséquence.
+
+  Gestion de la Connexion :
+      Les deux modules sont capables de détecter si la connexion est close et de gérer proprement la fermeture des sockets lorsqu'ils ont terminé leur tâche.
+
+Cette architecture permet une communication efficace entre un client et un serveur, chacun exécutant des tâches spécifiques selon son rôle dans le système, sachant que la logique de fonctionnement est centralisé côté Raspberry Pi donc c'est lui qui "mène le jeu".
+
+//TODO révision par Yanis!
+
+A propos du Sensor, c'est un "enveloppeur" qui offre une abstraction pour la gestion de la caméra sur Raspberry Pi. Voici comment il fonctionne :
+
+  Initialisation:
+      Lors de l'initialisation de la classe Sensor, l'utilisateur fournit des configurations et l'heure actuelle du PC. Ces informations sont utilisées pour configurer le capteur et synchroniser l'horloge interne du module.
+      La classe crée une instance de Picamera2 pour gérer la caméra.
+
+  Méthodes publiques:
+      update_configurations(configurations): Cette méthode permet de mettre à jour les configurations du capteur. Si aucune configuration n'est fournie, un message de journalisation est enregistré.
+      sync_time(pc_time): Elle synchronise l'horloge interne du module avec l'heure fournie en paramètre ou avec l'heure actuelle du PC si aucun paramètre n'est fourni.
+      start_camera(): Cette méthode démarre la caméra s'il n'est pas déjà en cours d'utilisation. Elle configure également les paramètres de capture de l'image.
+      capture_image(): Captures une image à partir de la caméra. Elle utilise les configurations actuelles pour déterminer le chemin de sauvegarde de l'image. Si la luminosité de l'image capturée ne satisfait pas un seuil prédéfini, l'image est supprimée.
+      check_brightness(metadata): Vérifie si la luminosité de l'image capturée dépasse un seuil défini dans les configurations.
+
+  Méthodes privées:
+      __update_still_configurations(): Cette méthode met à jour les configurations de capture d'image fixes en fonction des configurations actuelles.
+      __get_path(): Elle génère le chemin de sauvegarde de l'image en fonction de l'heure et du format de nommage spécifiés dans les configurations.
+
+  Utilisation:
+      Lorsque le module est exécuté directement, il charge les configurations par défaut à partir d'un fichier YAML, crée une instance de Sensor, démarre la caméra et capture trois images à intervalles de 3 secondes. Enfin, il ferme la caméra.
+
+Il offre une abstraction pratique pour la capture d'images avec la caméra Raspberry Pi en encapsulant les détails de la configuration et de la gestion de la caméra ainsi il facilite l'emploi de ces fonctionnalités dans le main, sans pour autant surcharger la présentation.
+
+On peut passer maintenant à l'exploitation.
 
 ### III.1 - Paramètrage
 
