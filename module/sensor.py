@@ -20,7 +20,8 @@ class Sensor:
     
     def sync_time(self, pc_time : time=None):    
         if pc_time is None:
-            self.module_time = time.time()
+            module_time = time.time()
+            self.module_time = time.localtime(module_time)
             self.module_time_specifier="m"
         else:
             self.module_time = time.localtime(pc_time)
