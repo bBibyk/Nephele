@@ -27,36 +27,47 @@ def sigalrm_handler(sig, frame):
     signal.alarm(delay)
 
     
-def sync_time():
+    
+def sync_time(sync_type):
+    """
+    sync_type=0 -> auto-synchronization with module time
+    
+    sync_type=1 -> synchronization with pc time
+    """
     global pc_time
     
-    if connection.connect():
-        connection.send_request("<TIME>")
-        pc_time = connection.recv_time()
-        connection.disconnect_client()
-        sensor.sync_time(pc_time)
-        logger("Main", "Connection established. Synchronizing time.")
+    if sync_type:
+        if connection.connect():
+            connection.send_request("<TIME>")
+            pc_time = connection.recv_time()
+            connection.disconnect_client()
+            sensor.sync_time(pc_time)
+            logger("Main", "Synchronizing time.")
+        else:
+            connection.disconnect_client()
+            sensor.sync_time()
+            logger("Main", "Couldn't synchronize time.")
     else:
-        connection.disconnect_client()
-        pc_time = time.time()
-        sensor.sync_time(pc_time)
-        logger("Main", "Connection failed. Couldn't synchronize time.")
+        sensor.sync_time()
     
     
-def sync_config():
-    global configurations
+def sync_configuration():
+    global configurations, time_interval, config_interval, delay
     
     if connection.connect():
         connection.send_request("<PARA>")
         tmp_configuration = connection.recv_configurations()
         if tmp_configuration is not None:
+            logger("Main", "Updating configurations.")
             configurations = tmp_configuration
             sensor.update_configurations(configurations)
+            delay = configurations['module']['delay']
+            time_interval = configurations['module']['clock']['time_interval']
+            config_interval = configurations['module']['clock']['conf_interval']
         connection.disconnect_client()
-        logger("Main", "Connection established. Updating configurations.")
     else:
         connection.disconnect_client()
-        logger("Main", "Connection failed. Couldn't upload new configurations.")
+        logger("Main", "Couldn't upload new configurations.")
         
     
 def send_photo():
@@ -66,13 +77,13 @@ def send_photo():
         if connection.connect():
             connection.send_request("<PHOT>")
             if connection.send_photo(file):
-                logger("Main", f"Connection established. Sending photo {file}.")
+                logger("Main", f"Sending photo {file}.")
                 os.remove(path + file)
                 logger("Main", f"Photo {file} removed from module storage.")
             connection.disconnect_client()
 
         else:
-            logger("Main", "Connection failed. Couldn't send photos.")
+            logger("Main", "Couldn't send photos. Photo saved in module/shots/")
             connection.disconnect_client()
             
 
@@ -85,12 +96,16 @@ def capture():
         sync_time_counter +=1
         
         if sync_config_counter >= config_interval:
-            sync_config()
+            sync_configuration()
+            sensor.stop()
             sync_config_counter = 0
             
         if sync_time_counter >= time_interval:
-            sync_time()
+            sync_time(1)
             sync_time_counter = 0
+        else:
+            sync_time(0)
+        
         send_photo()
         signal.pause()
         
@@ -102,9 +117,6 @@ signal.signal(signal.SIGINT, sigint_handler)
 # Entity creation
 connection = cs.Connection()
 sensor = ss.Sensor(configurations=configurations, pc_time=pc_time)
-
-#Starting camera
-sensor.start_camera()
 
 capture()
 
