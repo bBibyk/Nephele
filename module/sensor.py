@@ -18,13 +18,10 @@ class Sensor:
         else:
             logger("Sensor","No configurations provided.")
     
-    def sync_time(self, pc_time : time=None):    
+    def sync_time(self, pc_time : time=None):
         if pc_time is None:
-            module_time = time.time()
-            self.module_time = time.localtime(module_time)
             self.module_time_specifier="m"
         else:
-            self.module_time = time.localtime(pc_time)
             self.module_time_specifier=""
         
             
@@ -51,7 +48,7 @@ class Sensor:
     def __get_path(self):
         
         try:
-            timestamp : str = time.strftime(self.configurations['module']['naming']['timestamp'], self.module_time)
+            timestamp : str = time.strftime(self.configurations['module']['naming']['timestamp'], time.time())
             image_name_format : str = self.configurations['module']['naming']['image_name']
             image_name : str = self.module_time_specifier + image_name_format.format(timestamp=timestamp)
             image_path = get_script_directory()+self.configurations['module']['shots'] + image_name  

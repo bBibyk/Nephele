@@ -8,7 +8,7 @@ from time import sleep
 
 
 configurations = load_configurations("default.yaml")
-pc_time = time.time()
+pc_time = None
 delay = configurations['module']['delay']
 time_interval = configurations['module']['clock']['time_interval']
 config_interval = configurations['module']['clock']['conf_interval']
@@ -30,25 +30,26 @@ def sigalrm_handler(sig, frame):
     
 def sync_time(sync_type):
     """
-    sync_type=0 -> auto-synchronization with module time
+    sync_type = False -> no synchronization using module time
     
-    sync_type=1 -> synchronization with pc time
+    sync_type = True -> synchronization using pc time
     """
-    global pc_time
     
     if sync_type:
         if connection.connect():
             connection.send_request("<TIME>")
             pc_time = connection.recv_time()
             connection.disconnect_client()
-            sensor.sync_time(pc_time)
+            if pc_time is not None:
+                string_format_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(pc_time))
+                os.system("sudo date -s \"" + string_format_time + "\" > /dev/null")
+                logger("Main", "Time set to " + string_format_time)
             logger("Main", "Synchronizing time.")
         else:
             connection.disconnect_client()
-            sensor.sync_time()
             logger("Main", "Couldn't synchronize time.")
-    else:
-        sensor.sync_time()
+    
+    sensor.sync_time(pc_time)
     
     
 def sync_configuration():
@@ -101,10 +102,10 @@ def capture():
             sync_config_counter = 0
             
         if sync_time_counter >= time_interval:
-            sync_time(1)
+            sync_time(True)
             sync_time_counter = 0
         else:
-            sync_time(0)
+            sync_time(False)
         
         send_photo()
         signal.pause()
