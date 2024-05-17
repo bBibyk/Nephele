@@ -10,12 +10,12 @@
   - [I - Identification du projet](#i---identification-du-projet)
   - [II - Préparation du matériel](#ii---préparation-du-matériel)
     - [II.1 - Client](#ii1---client)
-      - [II.1.a - Configuration](#ii1a---configuration)
-      - [II.1.b - Scripts](#ii1b---scripts)
+      - [II.1.a - Scripts](#ii1a---scripts)
+      - [II.1.b - Configuration](#ii1b---configuration)
       - [II.1.c - Dépendances](#ii1c---dépendances)
     - [II.2 - Module](#ii2---module)
-      - [II.2.a - Configuration](#ii2a---configuration)
-      - [II.2.b - Scripts](#ii2b---scripts)
+      - [II.2.a - Scripts](#ii2a---scripts)
+      - [II.2.b - Configuration](#ii2b---configuration)
       - [II.2.c -  Dépendances](#ii2c----dépendances)
   - [III - Utilisation](#iii---utilisation)
     - [III.1 - Paramètrage](#iii1---paramètrage)
@@ -49,12 +49,7 @@ Pour commencer, le matériel nécessite une préparation au préalable du déplo
 
 L'**ordinateur d'acquisition** doit fonctionner sous un système d'exploitation **Linux**. Nous allons volontairement omettre la partie de préparation de l'OS, car elle dépend de votre configuration.
 
-#### II.1.a - Configuration
-
-- **Configurer** une **adresse IP statique** sur l'interface qui sera utilisée pour la communication avec le module. La démarche à suivre dépend de l'entité qui contrôle l'attribution des IP dans le système que vous utilisez pour l'ordinateur d'acquisition. Mais dans tous les cas veillez à choisir une adresse dans le même sous-réseau que le module.
-- **Créer** un répertoire de **dépot** où seront stockées les photos.
-
-#### II.1.b - Scripts
+#### II.1.a - Scripts
 
 - **Cloner** tous les **scripts** client sur l'ordinateur :
   ```
@@ -65,13 +60,20 @@ L'**ordinateur d'acquisition** doit fonctionner sous un système d'exploitation 
   git pull origin main
   ```
 
+#### II.1.b - Configuration
+
+- **Configurer** une **adresse IP statique** sur l'interface qui sera utilisée pour la communication avec le module. La démarche à suivre dépend de l'entité qui contrôle l'attribution des IP dans le système que vous utilisez pour l'ordinateur d'acquisition. Mais dans tous les cas veillez à choisir une adresse dans le même sous-réseau que le module.
+
+- **Créer** un répertoire de **dépot** où seront stockées les photos.
+
+- Si besoin, **mettre en autostart** le script **main.py** du client.
+  
 #### II.1.c - Dépendances
 
 - **Installer** les **bibliothèques** python nécessaires, depuis ```client/``` :
   ```
   python -m pip install -r requirements_client.txt
   ```
-- Si besoin, **mettre en autostart** le script **main.py** du client.
 
 ### II.2 - Module
 
@@ -84,7 +86,19 @@ Les éléments suivants seront nécessaires pour faire fonctionner le module :
  - **Module caméra haute qualité**
  - **Objectif fisheye**
 
-#### II.2.a - Configuration
+
+#### II.2.a - Scripts
+
+- **Cloner** tous les **scripts** module sur l'ordinateur :
+  ```
+  git init
+  git remote add -f origin "https://github.com/bBibyk/Nephele.git"
+  git config core.sparseCheckout true
+  echo "module/" >> .git/info/sparse-checkout
+  git pull origin main
+  ```
+
+#### II.2.b - Configuration
 
 - **Installer** sur le module le système d'exploitation **Raspberry Pi OS Bookworm**.
   
@@ -110,18 +124,19 @@ Les éléments suivants seront nécessaires pour faire fonctionner le module :
    - Sauvegarder.
    - Redémarrer le système.
 
-\\TODO dependances apt?
-
-#### II.2.b - Scripts
-
-- **Cloner** tous les **scripts** module sur l'ordinateur :
-  ```
-  git init
-  git remote add -f origin "https://github.com/bBibyk/Nephele.git"
-  git config core.sparseCheckout true
-  echo "module/" >> .git/info/sparse-checkout
-  git pull origin main
-  ```
+- **Mettre** le script de **start_module.sh** en **autostart** :
+    - Depuis ```module/``` lancer :
+    ```
+    chmod +x start_module.sh
+    ```
+    - Lancer la commande :
+    ```
+    sudo nano /etc/rc.local
+    ```
+    - Ecrire avant la ligne ```# Print the IP address```:
+    ```
+    [chemin_absolu]/start_module.sh
+    ```
 
 #### II.2.c -  Dépendances
 
@@ -130,23 +145,9 @@ Les éléments suivants seront nécessaires pour faire fonctionner le module :
   python -m pip install -r requirements_module.txt
   ```
 
-- **Mettre en place** le script de **autostart**, depuis ```client/``` :
-  ```
-  chmod +x start_client.sh
-  ```
-
 - **S'assurer** que le chemin dans le fichier start_client.sh est **absolu et correct**.
 
-- **Mettre** le script en **autostart**:
-    - Lancer la commande :
-    ```
-    sudo nano /etc/rc.local
-    ```
-
-    - Ecrire avant la ligne ```# Print the IP address```:
-    ```
-    sudo [chemin_absolu]/start_module.sh
-    ```
+\\TODO dependances apt?
 
 ## III - Utilisation
 
