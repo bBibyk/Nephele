@@ -35,6 +35,8 @@ def sync_time(sync_type):
     sync_type = True -> synchronization using pc time
     """
     
+    global pc_time
+
     if sync_type:
         if connection.connect():
             connection.send_request("<TIME>")
@@ -50,7 +52,7 @@ def sync_time(sync_type):
             logger("Main", "Couldn't synchronize time.")
     
     sensor.sync_time(pc_time)
-    
+
     
 def sync_configuration():
     global configurations, time_interval, config_interval, delay
