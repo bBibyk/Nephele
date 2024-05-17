@@ -48,7 +48,7 @@ class Sensor:
     def __get_path(self):
         
         try:
-            timestamp : str = time.strftime(self.configurations['module']['naming']['timestamp'], time.time())
+            timestamp : str = time.strftime(self.configurations['module']['naming']['timestamp'])
             image_name_format : str = self.configurations['module']['naming']['image_name']
             image_name : str = self.module_time_specifier + image_name_format.format(timestamp=timestamp)
             image_path = get_script_directory()+self.configurations['module']['shots'] + image_name  
