@@ -16,15 +16,16 @@ network :
 #Paramètres client
 client :
   storage_path : /depot/ #Attention, chemin absolu nécessaire avec '/' à la fin.
+  socket_timeout : 14 #Temps d'attente du client, delay*2 conseillé (secondes) (int)
 
 
 #Paramètres module
 module :
   shots : /shots/ #Attention, chemin absolu nécessaire avec '/' à la fin.
-  delay : 5 #Delai entre deux captures (secondes) (int)
+  delay : 7 #Delai entre deux captures (secondes) (int)
 
   clock:
-    time_interval : 1  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
+    time_interval : 10  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
     conf_interval : 3 #Synchroniser la configuration toutes les (conf_interval) captures (int)
 
   #Paramètres capteur

@@ -9,19 +9,23 @@ def sigint_handler(sig, frame):
     logger("Main", "Exiting...")
     exit()
 
+def sigalarm_handler(sig, frame):
+    pass
+    
+
 signal.signal(signal.SIGINT, sigint_handler)
     
 connection = cc.Connection()
-connected = False
 
 
 while True :
     try:
-        connected = connection.connect()
-        if connected:
+        logger("Main", "Connecting...")
+        if connection.connect():
             connection.request()
             connection.disconnect()
         else:
-            time.sleep(5)
+            logger("Main", "Unable to connect. Retrying in 5 seconds...")
+            time.sleep(3)
     except Exception as e:
         logger("Main", "Unexpected exception.", e)
