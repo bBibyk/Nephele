@@ -8,6 +8,7 @@ from time import sleep
 
 
 configurations = load_configurations("default.yaml")
+connection = None
 pc_time = None
 delay = configurations['module']['delay']
 time_interval = configurations['module']['clock']['time_interval']
@@ -26,6 +27,14 @@ def sigalrm_handler(sig, frame):
     sensor.capture_image()
     signal.alarm(delay)
 
+def connect():
+    global connection
+    if connection is None:
+        try:
+            connection = cs.Connection()
+        except :
+            logger("Main", "Couldn't create connection entity")
+    
     
     
 def sync_time(sync_type):
@@ -37,6 +46,9 @@ def sync_time(sync_type):
     
     global pc_time
 
+    if connection is None:
+        return
+    
     if sync_type:
         if connection.connect():
             connection.send_request("<TIME>")
@@ -57,6 +69,9 @@ def sync_time(sync_type):
 def sync_configuration():
     global configurations, time_interval, config_interval, delay
     
+    if connection is None:
+        return
+    
     if connection.connect():
         connection.send_request("<PARA>")
         tmp_configuration = connection.recv_configurations()
@@ -74,6 +89,10 @@ def sync_configuration():
         
     
 def send_photo():
+
+    if connection is None:
+        return
+    
     path = get_script_directory() + configurations['module']['shots']
     dirs = os.listdir(path)
     for file in dirs:
@@ -117,8 +136,8 @@ def capture():
 signal.signal(signal.SIGALRM, sigalrm_handler)
 signal.signal(signal.SIGINT, sigint_handler)
 
-# Entity creation
-connection = cs.Connection()
+connect()
+
 sensor = ss.Sensor(configurations=configurations, pc_time=pc_time)
 
 capture()
