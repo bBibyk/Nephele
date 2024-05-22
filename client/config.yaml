@@ -25,7 +25,7 @@ module :
   delay : 7 #Delai entre deux captures (secondes) (int)
 
   clock:
-    time_interval : 10  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
+    time_interval : 1  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
     conf_interval : 3 #Synchroniser la configuration toutes les (conf_interval) captures (int)
 
   #Paramètres capteur
@@ -36,7 +36,7 @@ module :
 
   #Paramètres nommage
   naming :
-    image_name : 'StationFac_L1_ImageCiel_{timestamp}.jpg' #Nom du fichier image avec timestamp
+    image_name : 'StationFac_L1_ImageCiel_{timestamp}{module_time_specifier}.jpg' #Nom du fichier image avec timestamp
     timestamp : '%Y%m%d%H%M%S' #Format du timestamp
 
   brightness_threshold : 10 #Seuil de luminosité pour refuser une capture (lux) (int)
