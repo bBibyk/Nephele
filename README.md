@@ -189,9 +189,9 @@ A propos du Sensor, c'est un "wrapper" qui offre une abstraction pour la gestion
       sync_time(pc_time): Elle synchronise l'horloge interne du module avec l'heure fournie en paramètre ou avec l'heure actuelle du PC si aucun paramètre n'est fourni.
       start_camera(): Cette méthode démarre la caméra s'il n'est pas déjà en cours d'utilisation. Elle configure également les paramètres de capture de l'image.
       capture_image(): Capture une image à partir de la caméra. Elle utilise les configurations actuelles pour déterminer le chemin de sauvegarde de l'image. Si la luminosité de l'image capturée ne satisfait pas un seuil prédéfini, l'image est supprimée.
-      check_brightness(metadata): Vérifie si la luminosité de l'image capturée dépasse un seuil défini dans les configurations.
 
   Méthodes privées:
+      __check_brightness(metadata): Vérifie si la luminosité de l'image capturée dépasse un seuil défini dans les configurations.
       __update_still_configurations(): Cette méthode met à jour les configurations de capture d'image fixes en fonction des configurations actuelles.
       __get_path(): Elle génère le chemin de sauvegarde de l'image en fonction de l'heure et du format de nommage spécifiés dans les configurations.
 
