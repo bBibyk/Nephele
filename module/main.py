@@ -27,14 +27,15 @@ def sigalrm_handler(sig, frame):
     sensor.capture_image()
     signal.alarm(delay)
 
-def connect():
+def instanciate_connection():
     global connection
     if connection is None:
         try:
             connection = cs.Connection()
-        except :
-            logger("Main", "Couldn't create connection entity")
-    
+            return True
+        except Exception as e:
+            logger("Main", "Couldn't create connection entity.", e)
+            return False
     
 def sync_time(sync_type):
     """
@@ -45,7 +46,7 @@ def sync_time(sync_type):
     
     global pc_time
 
-    connect()
+    instanciate_connection()
     if sync_type:
         if connection.connect():
             connection.send_request("<TIME>")
@@ -66,7 +67,7 @@ def sync_time(sync_type):
 def sync_configuration():
     global configurations, time_interval, config_interval, delay
     
-    connect()
+    instanciate_connection()
     
     if connection.connect():
         connection.send_request("<PARA>")
@@ -86,7 +87,7 @@ def sync_configuration():
     
 def send_photo():
 
-    connect()
+    instanciate_connection()
     
     path = get_script_directory() + configurations['module']['shots']
     dirs = os.listdir(path)
@@ -131,7 +132,7 @@ def capture():
 signal.signal(signal.SIGALRM, sigalrm_handler)
 signal.signal(signal.SIGINT, sigint_handler)
 
-connect()
+instanciate_connection()
 
 sensor = ss.Sensor(configurations=configurations, pc_time=pc_time)
 
