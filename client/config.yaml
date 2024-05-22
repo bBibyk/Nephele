@@ -25,7 +25,7 @@ module :
   delay : 7 #Delai entre deux captures (secondes) (int)
 
   clock:
-    time_interval : 1  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
+    time_interval : 1 #Synchroniser l'horloge toutes les (sync_interval) captures (int)
     conf_interval : 3 #Synchroniser la configuration toutes les (conf_interval) captures (int)
 
   #Paramètres capteur
