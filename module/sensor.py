@@ -64,7 +64,7 @@ class Sensor:
         try:    
             metadata = self.picam2.capture_file(image_path)
             logger("Sensor", f"Image captured: {image_name}")
-            if not self.check_brightness(metadata):
+            if not self.__check_brightness(metadata):
                 os.remove(image_path)
                 logger("Sensor", f"Brightness does not satistfy the given threshold. Image deleted: {image_name}")
         except Exception as e:
@@ -74,19 +74,13 @@ class Sensor:
         return metadata
 
 
-    def check_brightness(self, metadata):
+    def __check_brightness(self, metadata):
         if metadata is not None:
             brightness_threshold = self.configurations['module']['brightness_threshold']
             if metadata['Lux']>brightness_threshold:
                 return True
         return False
     
-    def __night_mode(args):
-        pass
-    
-    def enable_night_mode(args):
-        pass
-                
     def stop(self):
         self.picam2.stop()
         
