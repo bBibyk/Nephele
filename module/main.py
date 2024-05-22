@@ -2,8 +2,8 @@ import connection_server as cs
 import sensor as ss
 import signal
 import os
+import time
 from utils import *
-from time import sleep
 
 
 
