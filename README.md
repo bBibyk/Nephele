@@ -107,7 +107,7 @@ Les éléments suivants seront nécessaires pour faire fonctionner le module :
   sudo apt update
   sudo apt upgrade
   ```
-- **Vérifier** que l'**adresse IP** dans le fichier ```start_module.sh``` correspond bien à celle du fichier ```default.yaml```
+- **Paramétrer** une adresse IP statique par le biais de **nmtui**.
 - **Mettre** le script de ```start_module.sh``` en **autostart** :
     - Depuis ```module/``` lancer :
     ```
