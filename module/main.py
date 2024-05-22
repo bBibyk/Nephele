@@ -84,10 +84,10 @@ def send_photo():
                 os.remove(path + file)
                 logger("Main", f"Photo {file} removed from module storage.")
             connection.disconnect_client()
-
         else:
             logger("Main", "Couldn't send photos. Photo saved in module/shots/")
             connection.disconnect_client()
+            return
             
 
 def capture():
