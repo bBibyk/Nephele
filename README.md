@@ -17,6 +17,7 @@
       - [II.2.a - Scripts](#ii2a---scripts)
       - [II.2.b - Configuration](#ii2b---configuration)
       - [II.2.c -  Dépendances](#ii2c----dépendances)
+      - [II.2.d -  Dépendances apt](#ii2d----dépendances-apt)
   - [III - Utilisation](#iii---utilisation)
     - [III.1 - Paramètrage](#iii1---paramètrage)
     - [III.2 - Lancement](#iii2---lancement)
@@ -131,7 +132,21 @@ Les éléments suivants seront nécessaires pour faire fonctionner le module :
 
 - **S'assurer** que le chemin dans le fichier start_client.sh est **absolu et correct**.
 
-\\TODO dependances apt?
+#### II.2.d -  Dépendances apt
+
+Le choix de la librairie picamera2 a été fait en raison de sa compatibilité avec la nouvelle API libcamera, qui est utilisée à partir de la version Pi OS Bullseye pour la gestion de la caméra.
+
+- **Installation avec apt** (**Recommandée**)
+  ```
+  sudo apt install -y python3-picamera2 --no-install-recommends
+  ```
+- **Installation complète avec Pip** en cas de problème avec l'installation recommandée.
+  ```
+  sudo apt install -y python3-libcamera python3-kms++
+  sudo apt install -y python3-prctl libatlas-base-dev ffmpeg libopenjp2-7 python3-pip
+  pip3 install numpy --upgrade
+  pip3 install picamera2
+  ```
 
 ## III - Utilisation
 
@@ -160,7 +175,6 @@ Le système repose sur une architecture client-serveur où la classe Client agit
 
 Cette architecture permet une communication efficace entre un client et un serveur, chacun exécutant des tâches spécifiques selon son rôle dans le système, sachant que la logique de fonctionnement est centralisée côté Raspberry Pi donc c'est lui qui "mène le jeu".
 
-//TODO révision par Yanis!
 
 A propos du Sensor, c'est un "wrapper" qui offre une abstraction pour la gestion de la caméra sur Raspberry Pi. Voici comment il fonctionne :
 
@@ -176,11 +190,10 @@ A propos du Sensor, c'est un "wrapper" qui offre une abstraction pour la gestion
 
   Méthodes privées:
       __check_brightness(metadata): Vérifie si la luminosité de l'image capturée dépasse un seuil défini dans les configurations.
-      __update_still_configurations(): Cette méthode met à jour les configurations de capture d'image fixes en fonction des configurations actuelles.
       __get_path(): Elle génère le chemin de sauvegarde de l'image en fonction de l'heure et du format de nommage spécifiés dans les configurations.
 
   Utilisation:
-      Lorsque le module est exécuté directement, il charge les configurations par défaut à partir d'un fichier YAML, crée une instance de Sensor, démarre la caméra et capture trois images à intervalles de 3 secondes. Enfin, il ferme la caméra.
+      Lorsque le module est exécuté directement, il charge les configurations par défaut à partir d'un fichier YAML, crée une instance de Sensor, démarre la caméra et capture les images selon un délai donné et dans le chemin spécifié, deux paramètres donnés par le fichier config.yaml. Enfin, il ferme la caméra en cas de signal envoyé ou d'erreur critique.
 
 Il offre une abstraction pratique pour la capture d'images avec la caméra Raspberry Pi en encapsulant les détails de la configuration et de la gestion de la caméra ainsi il facilite l'emploi de ces fonctionnalités dans le main, sans pour autant surcharger la présentation.
 
