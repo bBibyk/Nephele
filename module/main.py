@@ -36,7 +36,6 @@ def connect():
             logger("Main", "Couldn't create connection entity")
     
     
-    
 def sync_time(sync_type):
     """
     sync_type = False -> no synchronization using module time
@@ -46,9 +45,7 @@ def sync_time(sync_type):
     
     global pc_time
 
-    if connection is None:
-        return
-    
+    connect()
     if sync_type:
         if connection.connect():
             connection.send_request("<TIME>")
@@ -69,8 +66,7 @@ def sync_time(sync_type):
 def sync_configuration():
     global configurations, time_interval, config_interval, delay
     
-    if connection is None:
-        return
+    connect()
     
     if connection.connect():
         connection.send_request("<PARA>")
@@ -90,8 +86,7 @@ def sync_configuration():
     
 def send_photo():
 
-    if connection is None:
-        return
+    connect()
     
     path = get_script_directory() + configurations['module']['shots']
     dirs = os.listdir(path)
