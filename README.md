@@ -108,7 +108,7 @@ Les éléments suivants seront nécessaires pour faire fonctionner le module :
   sudo apt upgrade
   ```
 - **Vérifier** que l'**adresse IP** dans le fichier ```start_module.sh``` correspond bien à celle du fichier ```default.yaml```
-- **Mettre** le script de **start_module.sh** en **autostart** :
+- **Mettre** le script de ```start_module.sh``` en **autostart** :
     - Depuis ```module/``` lancer :
     ```
     chmod +x start_module.sh
