@@ -107,23 +107,7 @@ Les éléments suivants seront nécessaires pour faire fonctionner le module :
   sudo apt update
   sudo apt upgrade
   ```
-- **Installer** sur le module le **daemon DHCPCD** :
-  ```
-  sudo apt-get install dhcpcd5
-  ```
-- **Configurer** une **adresse IP statique** sur l'interface qui sera utilisée pour la communication avec le module. Dans notre cas c'est l'interface ```eth0```.
-   - Lancer la commande :
-  ```
-  sudo nano /etc/dhcpcd.conf
-  ```
-   - Ecrire :
-  ```
-  interface eth0
-  static ip_address=192.168.1.101/24
-  ```
-   - Sauvegarder.
-   - Redémarrer le système.
-
+- **Vérifier** que l'**adresse IP** dans le fichier ```start_module.sh``` correspond bien à celle du fichier ```default.yaml```
 - **Mettre** le script de **start_module.sh** en **autostart** :
     - Depuis ```module/``` lancer :
     ```
