@@ -58,13 +58,11 @@ def sync_time(sync_type):
                 os.system("sudo date -s \"" + string_format_time + "\" > /dev/null")
                 logger("Main", "Time set to " + string_format_time)
             logger("Main", "Synchronizing time.")
+            sensor.sync_time(pc_time)
         else:
             connection.disconnect_client()
             sensor.sync_time(pc_time)
             logger("Main", "Couldn't synchronize time.")
-    
-    sensor.sync_time(pc_time)
-
     
 def sync_configuration():
     global configurations, time_interval, config_interval, delay
