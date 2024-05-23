@@ -60,6 +60,7 @@ def sync_time(sync_type):
             logger("Main", "Synchronizing time.")
         else:
             connection.disconnect_client()
+            sensor.sync_time(pc_time)
             logger("Main", "Couldn't synchronize time.")
     
     sensor.sync_time(pc_time)
@@ -114,6 +115,7 @@ def capture():
     while True:
         sync_config_counter +=1
         sync_time_counter +=1
+        send_photo()
         
         if sync_config_counter >= config_interval:
             sync_configuration()
@@ -123,10 +125,7 @@ def capture():
         if sync_time_counter >= time_interval:
             sync_time(True)
             sync_time_counter = 0
-        else:
-            sync_time(False)
-        
-        send_photo()
+            
         signal.pause()
         
 
