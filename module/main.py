@@ -54,7 +54,7 @@ def sync_time(sync_type):
             pc_time = connection.recv_time()
             connection.disconnect_client()
             if pc_time is not None:
-                string_format_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(pc_time))
+                string_format_time = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(pc_time))
                 os.system("sudo date -s \"" + string_format_time + "\" > /dev/null")
                 logger("Main", "Time set to " + string_format_time)
             logger("Main", "Synchronizing time.")
