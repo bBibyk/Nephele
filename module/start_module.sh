@@ -2,10 +2,6 @@
 
 PROCESS_NAME="python3 /home/nephele/Nephele/module/main.py" # Remplacer le chemin ici
 
-sudo ip link set eth0 down
-sudo ip addr add 192.168.1.101/24 dev eth0
-sudo ip link set eth0 up
-
 while true
 do
     if ! pgrep -f "$PROCESS_NAME" > /dev/null
