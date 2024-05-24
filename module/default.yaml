@@ -21,7 +21,7 @@ client :
 #Paramètres module
 module :
   shots : /shots/ #Attention, chemin absolu nécessaire avec '/' à la fin.
-  delay : 10 #Delai entre deux captures (secondes) (int)
+  delay : 15 #Delai entre deux captures (secondes) (int)
 
   clock:
     time_interval : 2  #Synchroniser l'horloge toutes les (sync_interval) captures (int)
@@ -30,7 +30,7 @@ module :
   #Paramètres capteur
   sensor :
     output_size : #Resolution brute des images capturées par le capteur
-     width : 1600 #Largeur (pixels) (int)
+     width : 1322 #Largeur (pixels) (int)
     bit_depth : 12 #Nombre de bits utilisés pour représenter la couleur de chaque pixel. Valeurs possibles: 10 ou 12 (bits) (int)
 
   #Paramètres nommage
