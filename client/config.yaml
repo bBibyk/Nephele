@@ -22,7 +22,7 @@ client :
 #Paramètres module
 module :
   shots : /shots/ #Attention, chemin absolu nécessaire avec '/' à la fin.
-  delay : 30 #Delai entre deux captures (secondes) (int)
+  delay : 15 #Delai entre deux captures (secondes) (int)
 
   clock:
     time_interval : 3 #Synchroniser l'horloge toutes les (sync_interval) captures (int)
