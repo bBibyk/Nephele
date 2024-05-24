@@ -61,7 +61,7 @@ def sync_time(sync_type):
             sensor.sync_time(pc_time)
         else:
             connection.disconnect_client()
-            sensor.sync_time(pc_time)
+            sensor.sync_time()
             logger("Main", "Couldn't synchronize time.")
     
 def sync_configuration():
