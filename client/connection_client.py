@@ -13,7 +13,7 @@ class Connection:
     def connect(self):
         try:
             self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.__socket.settimeout(self.configurations["client"]["socket_timeout"])
+            self.__socket.settimeout(self.configurations["module"]["delay"] + 5)
             self.__socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.__socket.connect((self.configurations["network"]["server"]["host"], self.configurations["network"]["server"]["port"]))
             logger("Connection", "Connection established.")

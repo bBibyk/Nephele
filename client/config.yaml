@@ -15,8 +15,8 @@ network :
 
 #Paramètres client
 client :
-  storage_path : /home/nephele/data/ #Attention, chemin absolu nécessaire avec '/' à la fin.
-  socket_timeout : 14 #Temps d'attente du client, delay*2 conseillé (secondes) (int)
+  storage_path : /home/bogdan/depot/ #/home/nephele/data/ #Attention, chemin absolu nécessaire avec '/' à la fin.
+  socket_timeout : 30 #Temps d'attente du client, delay*2 conseillé (secondes) (int)
 
 
 #Paramètres module
