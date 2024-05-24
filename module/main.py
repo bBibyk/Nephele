@@ -110,7 +110,7 @@ def send_photo():
 def capture():
     sync_time_counter = time_interval
     sync_config_counter = config_interval
-    signal.alarm(delay)
+    signal.alarm(3)
     while True:
         sync_config_counter +=1
         sync_time_counter +=1
