@@ -58,7 +58,8 @@ def sync_time(sync_type):
             logger("Main", "Synchronizing time.")
             sensor.sync_time(pc_time)
         else:
-            connection.disconnect_client()
+            if connection is not None:
+                connection.disconnect_client()
             sensor.sync_time()
             logger("Main", "Couldn't synchronize time.")
     
@@ -76,7 +77,8 @@ def sync_configuration():
             config_interval = configurations['module']['clock']['conf_interval']
         connection.disconnect_client()
     else:
-        connection.disconnect_client()
+        if connection is not None:
+            connection.disconnect_client()
         logger("Main", "Couldn't upload new configurations.")
         
     
@@ -93,8 +95,8 @@ def send_photo():
             connection.disconnect_client()
         else:
             logger("Main", "Couldn't send photos. Photo saved in module/shots/")
-            connection.disconnect_client()
-            return
+            if connection is not None:
+                connection.disconnect_client()
             
 
 def capture():
@@ -131,7 +133,8 @@ capture()
 #Closing camera
 sensor.close()
 
-connection.disconnect()
+if connection is not None:
+    connection.disconnect()
 
         
 #send_photo('./shots/*')
