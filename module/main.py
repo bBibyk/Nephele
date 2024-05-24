@@ -119,11 +119,11 @@ def capture():
         if sync_config_counter >= config_interval:
             sync_configuration()
             sensor.stop()
-            sync_config_counter = 0
+            sync_config_counter = 1
             
         if sync_time_counter >= time_interval:
             sync_time(True)
-            sync_time_counter = 0
+            sync_time_counter = 1
             
         signal.pause()
         
