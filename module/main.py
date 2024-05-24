@@ -46,10 +46,8 @@ def sync_time(sync_type):
     
     global pc_time
 
-    if not instantiate_connection():
-        return
     if sync_type:
-        if connection.connect():
+        if instantiate_connection() and connection.connect():
             connection.send_request("<TIME>")
             pc_time = connection.recv_time()
             connection.disconnect_client()
@@ -66,10 +64,7 @@ def sync_time(sync_type):
     
 def sync_configuration():
     global configurations, time_interval, config_interval, delay
-    
-    if not instantiate_connection():
-        return
-    if connection.connect():
+    if instantiate_connection() and connection.connect():
         connection.send_request("<PARA>")
         tmp_configuration = connection.recv_configurations()
         if tmp_configuration is not None:
@@ -86,14 +81,10 @@ def sync_configuration():
         
     
 def send_photo():
-    
-    if not instantiate_connection():
-        return
-    
     path = get_script_directory() + configurations['module']['shots']
     dirs = os.listdir(path)
     for file in dirs:
-        if connection.connect():
+        if instantiate_connection() and connection.connect():
             connection.send_request("<PHOT>")
             if connection.send_photo(file):
                 logger("Main", f"Sending photo {file}.")
