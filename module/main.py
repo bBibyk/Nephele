@@ -46,8 +46,11 @@ def sync_time(sync_type):
     
     global pc_time
 
+    if not instantiate_connection():
+        sensor.sync_time()
+        return
     if sync_type:
-        if instantiate_connection() and connection.connect():
+        if connection.connect():
             connection.send_request("<TIME>")
             pc_time = connection.recv_time()
             connection.disconnect_client()
@@ -58,14 +61,16 @@ def sync_time(sync_type):
             logger("Main", "Synchronizing time.")
             sensor.sync_time(pc_time)
         else:
-            if connection is not None:
-                connection.disconnect_client()
+            connection.disconnect_client()
             sensor.sync_time()
             logger("Main", "Couldn't synchronize time.")
     
 def sync_configuration():
     global configurations, time_interval, config_interval, delay
-    if instantiate_connection() and connection.connect():
+    
+    if not instantiate_connection():
+        return
+    if connection.connect():
         connection.send_request("<PARA>")
         tmp_configuration = connection.recv_configurations()
         if tmp_configuration is not None:
@@ -77,16 +82,19 @@ def sync_configuration():
             config_interval = configurations['module']['clock']['conf_interval']
         connection.disconnect_client()
     else:
-        if connection is not None:
-            connection.disconnect_client()
+        connection.disconnect_client()
         logger("Main", "Couldn't upload new configurations.")
         
     
 def send_photo():
+    
+    if not instantiate_connection():
+        return
+    
     path = get_script_directory() + configurations['module']['shots']
     dirs = os.listdir(path)
     for file in dirs:
-        if instantiate_connection() and connection.connect():
+        if connection.connect():
             connection.send_request("<PHOT>")
             if connection.send_photo(file):
                 logger("Main", f"Sending photo {file}.")
@@ -95,14 +103,14 @@ def send_photo():
             connection.disconnect_client()
         else:
             logger("Main", "Couldn't send photos. Photo saved in module/shots/")
-            if connection is not None:
-                connection.disconnect_client()
+            connection.disconnect_client()
+            return
             
 
 def capture():
     sync_time_counter = time_interval
     sync_config_counter = config_interval
-    sigalrm_handler(None, None)
+    signal.alarm(delay)
     while True:
         sync_config_counter +=1
         sync_time_counter +=1
@@ -131,10 +139,9 @@ sensor = ss.Sensor(configurations=configurations, pc_time=pc_time)
 capture()
 
 #Closing camera
-sensor.close()
+# sensor.close()
 
-if connection is not None:
-    connection.disconnect()
+# connection.disconnect()
 
         
 #send_photo('./shots/*')
