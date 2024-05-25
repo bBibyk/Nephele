@@ -63,6 +63,7 @@ def sync_time():
 
     if not instantiate_connection():
         sensor.sync_time()
+        logger("Main", "Using default module time.")
         return
     if connection.connect():
         connection.send_request("<TIME>")
@@ -83,6 +84,7 @@ def sync_configuration():
     global configurations, time_interval, config_interval, delay
     
     if not instantiate_connection():
+        logger("Main", "Using default.yaml configurations.")
         return
     if connection.connect():
         connection.send_request("<PARA>")
@@ -94,6 +96,9 @@ def sync_configuration():
             delay = configurations['module']['delay']
             time_interval = configurations['module']['clock']['time_interval']
             config_interval = configurations['module']['clock']['conf_interval']
+            logger("Main", "New configurations applied.")
+        else:
+            logger("Main", "Didn't receive configurations.")
         connection.disconnect_client()
     else:
         connection.disconnect_client()
@@ -102,10 +107,11 @@ def sync_configuration():
     
 def send_photo():
     
+    dir = configurations['module']['shots']
     if not instantiate_connection():
+        logger("Main", f"Photos are still in {dir}")
         return
-    
-    path = get_script_directory() + configurations['module']['shots']
+    path = get_script_directory() + dir
     dirs = os.listdir(path)
     for file in dirs:
         if connection.connect():
@@ -116,18 +122,20 @@ def send_photo():
                 logger("Main", f"Photo {file} removed from module storage.")
             connection.disconnect_client()
         else:
-            logger("Main", "Couldn't send photos. Photo saved in module/shots/")
+            logger("Main", f"Couldn't send photos. Photos saved in {dir}")
             connection.disconnect_client()
             return
             
 
 def capture():
+    logger("Main", "Starting to capture...")
     sync_configuration()
     sync_time()
     send_photo()
     signal.alarm(4)
     while True:
         signal.pause()
+        logger("Main", "Next capture...")
         
 
 #Handle signals
@@ -139,11 +147,3 @@ instantiate_connection()
 sensor = ss.Sensor(configurations=configurations, pc_time=pc_time)
 
 capture()
-
-#Closing camera
-# sensor.close()
-
-# connection.disconnect()
-
-        
-#send_photo('./shots/*')
