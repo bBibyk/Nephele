@@ -24,8 +24,25 @@ def sigint_handler(sig, frame):
     exit()
     
 def sigalrm_handler(sig, frame):
+    global sync_config_counter
+    global sync_time_counter
+
     sensor.capture_image()
     signal.alarm(delay)
+
+    sync_config_counter +=1
+    sync_time_counter +=1
+    send_photo()
+    
+    if sync_config_counter >= config_interval:
+        sync_configuration()
+        sensor.stop()
+        sync_config_counter = 1
+        
+    if sync_time_counter >= time_interval:
+        sync_time()
+        sync_time_counter = 1
+        
 
 def instantiate_connection():
     global connection
@@ -37,33 +54,27 @@ def instantiate_connection():
             return False
     return True
     
-def sync_time(sync_type):
-    """
-    sync_type = False -> no synchronization using module time
-    
-    sync_type = True -> synchronization using pc time
-    """
-    
+def sync_time():
+
     global pc_time
 
     if not instantiate_connection():
         sensor.sync_time()
         return
-    if sync_type:
-        if connection.connect():
-            connection.send_request("<TIME>")
-            pc_time = connection.recv_time()
-            connection.disconnect_client()
-            if pc_time is not None:
-                string_format_time = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(pc_time))
-                os.system("sudo date -s \"" + string_format_time + "\" > /dev/null")
-                logger("Main", "Time set to " + string_format_time)
-            logger("Main", "Synchronizing time.")
-            sensor.sync_time(pc_time)
-        else:
-            connection.disconnect_client()
-            sensor.sync_time()
-            logger("Main", "Couldn't synchronize time.")
+    if connection.connect():
+        connection.send_request("<TIME>")
+        pc_time = connection.recv_time()
+        connection.disconnect_client()
+        if pc_time is not None:
+            string_format_time = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(pc_time))
+            os.system("sudo date -s \"" + string_format_time + "\" > /dev/null")
+            logger("Main", "Time set to " + string_format_time)
+        logger("Main", "Synchronizing time.")
+        sensor.sync_time(pc_time)
+    else:
+        connection.disconnect_client()
+        sensor.sync_time()
+        logger("Main", "Couldn't synchronize time.")
     
 def sync_configuration():
     global configurations, time_interval, config_interval, delay
@@ -110,21 +121,11 @@ def send_photo():
 def capture():
     sync_time_counter = time_interval
     sync_config_counter = config_interval
-    signal.alarm(3)
+    sync_configuration()
+    sync_time()
+    send_photo()
+    signal.alarm(4)
     while True:
-        sync_config_counter +=1
-        sync_time_counter +=1
-        send_photo()
-        
-        if sync_config_counter >= config_interval:
-            sync_configuration()
-            sensor.stop()
-            sync_config_counter = 1
-            
-        if sync_time_counter >= time_interval:
-            sync_time(True)
-            sync_time_counter = 1
-            
         signal.pause()
         
 
