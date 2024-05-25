@@ -14,6 +14,9 @@ delay = configurations['module']['delay']
 time_interval = configurations['module']['clock']['time_interval']
 config_interval = configurations['module']['clock']['conf_interval']
 
+sync_time_counter = time_interval
+sync_config_counter = config_interval
+
 def sigint_handler(sig, frame):
     global connection, sensor
     
@@ -119,8 +122,6 @@ def send_photo():
             
 
 def capture():
-    sync_time_counter = time_interval
-    sync_config_counter = config_interval
     sync_configuration()
     sync_time()
     send_photo()
