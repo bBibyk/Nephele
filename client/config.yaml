@@ -21,7 +21,7 @@ client :
 #Paramètres module
 module :
   shots : /shots/ #Attention, chemin absolu nécessaire avec '/' à la fin.
-  delay : 300 #Delai entre deux captures (secondes) (int)
+  delay : 30 #Delai entre deux captures (secondes) (int)
 
   clock:
     time_interval : 3 #Synchroniser l'horloge toutes les (sync_interval) captures (int)
@@ -38,4 +38,4 @@ module :
     image_name : 'StationFac_L1_ImageCiel_{timestamp}{module_time_specifier}.jpg' #Nom du fichier image avec timestamp
     timestamp : '%Y%m%d%H%M%S' #Format du timestamp
 
-  brightness_threshold : 0 #Seuil de luminosité pour refuser une capture (lux) (int)
+  brightness_threshold : 10 #Seuil de luminosité pour refuser une capture (lux) (int)
