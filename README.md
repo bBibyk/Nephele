@@ -18,6 +18,8 @@
       - [II.2.b - Configuration](#ii2b---configuration)
       - [II.2.c -  Dépendances](#ii2c----dépendances)
       - [II.2.d -  Dépendances apt](#ii2d----dépendances-apt)
+        - [II.2.d.a - Git](#ii2da---git)
+        - [II.2.d.b - Picamera2](#ii2db---picamera2)
   - [III - Utilisation](#iii---utilisation)
     - [III.1 - Paramètrage](#iii1---paramètrage)
     - [III.2 - Lancement](#iii2---lancement)
@@ -133,6 +135,14 @@ Les éléments suivants seront nécessaires pour faire fonctionner le module :
 - **S'assurer** que le chemin dans le fichier start_client.sh est **absolu et correct**.
 
 #### II.2.d -  Dépendances apt
+
+##### II.2.d.a - Git
+
+```
+sudo apt install git
+```
+
+##### II.2.d.b - Picamera2
 
 Le choix de la librairie picamera2 a été fait en raison de sa compatibilité avec la nouvelle API libcamera, qui est utilisée à partir de la version Pi OS Bullseye pour la gestion de la caméra.
 
