@@ -173,7 +173,7 @@ Le système repose sur une architecture client-serveur où la classe Client agit
       Le module Client tente de se connecter au serveur en utilisant les configurations spécifiées.
 
   Échange de Données :
-      Le module Server envoie des demandes au client sous forme de tags prédéfinis (comme <PARA>, <TIME>, <PHOT>) via le socket.
+      Le module Server envoie des demandes au client sous forme de tags prédéfinis (comme < PARA >, < TIME >, < PHOT >) via le socket.
       Le module Client reçoit ces demandes, les traite et envoie les réponses appropriées en fonction des tags reçus.
 
   Traitement des Demandes :
